@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Loader;
 using ThinkingHome.Migrator.Logging;
+using ThinkingHome.Migrator.Providers;
 
 namespace ThinkingHome.Migrator
 {
@@ -54,10 +56,10 @@ namespace ThinkingHome.Migrator
         /// </summary>
         public Migrator(ITransformationProvider provider, Assembly asm)
         {
-            Require.IsNotNull(provider, "�� ����� ��������� �������������");
-            this.provider = provider;
+            if (provider == null) throw new ArgumentNullException(nameof(provider));
+            if (asm == null) throw new ArgumentNullException(nameof(asm));
 
-            Require.IsNotNull(asm, "�� ������ ������ � ����������");
+            Provider = provider;
             migrationAssembly = new MigrationAssembly(asm);
         }
 
@@ -66,17 +68,14 @@ namespace ThinkingHome.Migrator
         /// <summary>
         /// Returns registered migration <see cref="System.Type">types</see>.
         /// </summary>
-        public ReadOnlyCollection<MigrationInfo> AvailableMigrations
-        {
-            get { return migrationAssembly.MigrationsTypes; }
-        }
+        public ReadOnlyCollection<MigrationInfo> AvailableMigrations => migrationAssembly.MigrationsTypes;
 
         /// <summary>
         /// Returns the current migrations applied to the database.
         /// </summary>
         public IList<long> GetAppliedMigrations()
         {
-            return provider.GetAppliedMigrations(Key);
+            return Provider.GetAppliedMigrations(Key);
         }
 
         /// <summary>
@@ -93,9 +92,9 @@ namespace ThinkingHome.Migrator
         public void Migrate(long databaseVersion = -1)
         {
 
-            long targetVersion = databaseVersion < 0 ? migrationAssembly.LastVersion : databaseVersion;
+            long targetVersion = databaseVersion < 0 ? migrationAssembly.LatestVersion : databaseVersion;
 
-            IList<long> appliedMigrations = provider.GetAppliedMigrations(Key);
+            IList<long> appliedMigrations = Provider.GetAppliedMigrations(Key);
             IList<long> availableMigrations = migrationAssembly.MigrationsTypes
                 .Select(mInfo => mInfo.Version).ToList();
 
@@ -171,12 +170,12 @@ namespace ThinkingHome.Migrator
         /// <param name="availableMigrations">������ ������ ��������� ��������</param>
         public static MigrationPlan BuildMigrationPlan(long target, IList<long> appliedMigrations, IList<long> availableMigrations)
         {
-            long startVersion = appliedMigrations.IsEmpty() ? 0 : appliedMigrations.Max();
+            long startVersion = appliedMigrations.Any() ? appliedMigrations.Max() : 0;
             var set = new HashSet<long>(appliedMigrations);
 
             // ��������
             var list = availableMigrations.Where(x => x < startVersion && !set.Contains(x)).ToList();
-            if (!list.IsEmpty())
+            if (list.Any())
             {
                 throw new VersionException(
                     "�������� ������������� ��������, ������ ������� ������ ������� ������ ��", list.ToArray());
@@ -195,7 +194,7 @@ namespace ThinkingHome.Migrator
 
         public void Dispose()
         {
-            provider.Dispose();
+            Provider.Dispose();
         }
 
         #endregion
