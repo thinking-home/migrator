@@ -8,7 +8,7 @@ namespace ThinkingHome.Migrator.Providers
     public abstract class TransformationProvider<TConnection> : SqlRunner, ITransformationProvider
         where TConnection : IDbConnection
     {
-        protected TransformationProvider(IDbConnection connection) : base(connection)
+        protected TransformationProvider(TConnection connection) : base(connection)
         {
         }
 
