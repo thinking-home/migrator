@@ -1,4 +1,4 @@
-﻿namespace ThinkingHome.Migrator.Framework
+﻿namespace ThinkingHome.Migrator.Framework.Interfaces
 {
     /// <summary>
     /// Migration interface

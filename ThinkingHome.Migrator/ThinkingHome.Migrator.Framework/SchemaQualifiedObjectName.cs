@@ -27,7 +27,7 @@
 
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Schema) ? Name : string.Format("{0}.{1}", Schema, Name);
+            return string.IsNullOrWhiteSpace(Schema) ? Name : $"{Schema}.{Name}";
         }
 
         #region Equals & GetHashCode

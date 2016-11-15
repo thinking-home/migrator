@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
-namespace ThinkingHome.Migrator.Framework
+namespace ThinkingHome.Migrator.Framework.Interfaces
 {
     /// <summary>
     /// The main interface to use in Migrations to make changes on a database schema.

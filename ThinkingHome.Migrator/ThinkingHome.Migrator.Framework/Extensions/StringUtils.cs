@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ThinkingHome.Migrator.Framework
+namespace ThinkingHome.Migrator.Framework.Extensions
 {
     public static class StringUtils
     {
@@ -12,7 +12,7 @@ namespace ThinkingHome.Migrator.Framework
         /// </summary>
         /// <param name="className"></param>
         /// <returns></returns>
-        public static string ToHumanName(string className)
+        public static string ToHumanName(this string className)
         {
             if (string.IsNullOrWhiteSpace(className))
             {
@@ -32,7 +32,7 @@ namespace ThinkingHome.Migrator.Framework
         /// <param name="placeholder"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
-        public static string ReplaceOnce(string template, string placeholder, string replacement)
+        public static string ReplaceOnce(this string template, string placeholder, string replacement)
         {
             var location = template.IndexOf(placeholder, StringComparison.Ordinal);
             if (location < 0)

@@ -1,4 +1,6 @@
 ﻿using System;
+using ThinkingHome.Migrator.Framework.Extensions;
+using ThinkingHome.Migrator.Framework.Interfaces;
 
 namespace ThinkingHome.Migrator.Framework
 {

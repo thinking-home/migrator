@@ -1,4 +1,7 @@
-﻿namespace ThinkingHome.Migrator.Framework
+﻿using ThinkingHome.Migrator.Framework.Extensions;
+using ThinkingHome.Migrator.Framework.Interfaces;
+
+namespace ThinkingHome.Migrator.Framework
 {
     /// <summary>
     /// A migration is a group of transformation applied to the database schema
@@ -58,7 +61,7 @@
         /// <summary>
         /// Migration name
         /// </summary>
-        public virtual string Name => StringUtils.ToHumanName(GetType().Name);
+        public virtual string Name => GetType().Name.ToHumanName();
 
         /// <summary>
         /// Defines tranformations to port the database to the current version.

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThinkingHome.Migrator.Framework
+namespace ThinkingHome.Migrator.Framework.Interfaces
 {
     public interface IConditionByProvider
     {

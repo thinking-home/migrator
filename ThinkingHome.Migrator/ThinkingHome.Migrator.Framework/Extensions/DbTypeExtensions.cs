@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace ThinkingHome.Migrator.Framework
+namespace ThinkingHome.Migrator.Framework.Extensions
 {
     /// <summary>
     /// Методы-расширения для класса System.Data.DbType
