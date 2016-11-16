@@ -75,7 +75,7 @@ namespace ThinkingHome.Migrator.Loader
             {
                 var attribute = type.GetTypeInfo().GetCustomAttribute<MigrationAttribute>();
 
-                if (attribute == null || !typeof(IMigration).IsAssignableFrom(type) || attribute.Ignore) continue;
+                if (attribute == null || !typeof(Migration).IsAssignableFrom(type) || attribute.Ignore) continue;
 
                 migrations.Add(new MigrationInfo(type));
             }
@@ -129,11 +129,11 @@ namespace ThinkingHome.Migrator.Loader
         /// </summary>
         /// <param name="migrationInfo">Information about the migration</param>
         /// <param name="provider">Database transformation provider</param>
-        public IMigration InstantiateMigration(MigrationInfo migrationInfo, ITransformationProvider provider)
+        public Migration InstantiateMigration(MigrationInfo migrationInfo, ITransformationProvider provider)
         {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-            var migration = (IMigration)Activator.CreateInstance(migrationInfo.Type);
+            var migration = (Migration)Activator.CreateInstance(migrationInfo.Type);
             migration.Database = provider;
             return migration;
         }

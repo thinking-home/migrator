@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using ThinkingHome.Migrator.Framework;
-using ThinkingHome.Migrator.Framework.Interfaces;
 
 namespace ThinkingHome.Migrator.Loader
 {
@@ -22,9 +21,10 @@ namespace ThinkingHome.Migrator.Loader
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!typeof(IMigration).IsAssignableFrom(type))
+            if (!typeof(Migration).IsAssignableFrom(type))
             {
-                throw new InvalidCastException("Migration class must implement the IMigration interface");
+                throw new InvalidCastException(
+                    "Migration class should be inherited from the ThinkingHome.Migrator.Framework.Migration class");
             }
 
             var attribute = type.GetTypeInfo().GetCustomAttribute<MigrationAttribute>();

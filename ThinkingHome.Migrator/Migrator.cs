@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using ThinkingHome.Migrator.Exceptions;
+using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Loader;
 using ThinkingHome.Migrator.Logging;
@@ -12,7 +13,6 @@ using ThinkingHome.Migrator.Providers;
 
 namespace ThinkingHome.Migrator
 {
-    /*
     /// <summary>
     /// Migrations mediator.
     /// </summary>
@@ -36,18 +36,21 @@ namespace ThinkingHome.Migrator
         #region constructors
 
         /// <summary>
-        /// �������������
+        /// Creates an instance of migrator
         /// </summary>
-        public Migrator(string providerTypeName, IDbConnection connection, Assembly asm)
-            : this(ProviderFactory.Create(providerTypeName, connection), asm)
+        /// <param name="providerFactoryType">Name or alias of provider factory class</param>
+        /// <param name="connection">Instance of database connection</param>
+        /// <param name="asm">Assembly that contains migrations</param>
+        public Migrator(string providerFactoryType, IDbConnection connection, Assembly asm)
+            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connection), asm)
         {
         }
 
         /// <summary>
         /// �������������
         /// </summary>
-        public Migrator(string providerTypeName, string connectionString, Assembly asm)
-            : this(ProviderFactory.Create(providerTypeName, connectionString), asm)
+        public Migrator(string providerFactoryType, string connectionString, Assembly asm)
+            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connectionString), asm)
         {
         }
 
@@ -120,31 +123,31 @@ namespace ThinkingHome.Migrator
         {
             var migrationInfo = migrationAssembly.GetMigrationInfo(targetVersion);
 
-            IMigration migration = migrationAssembly.InstantiateMigration(migrationInfo, provider);
+            Migration migration = migrationAssembly.InstantiateMigration(migrationInfo, Provider);
 
             try
             {
                 if (!migrationInfo.WithoutTransaction)
                 {
-                    provider.BeginTransaction();
+                    Provider.BeginTransaction();
                 }
 
                 if (targetVersion <= currentDatabaseVersion)
                 {
                     MigratorLogManager.Log.MigrateDown(targetVersion, migration.Name);
                     migration.Revert();
-                    provider.MigrationUnApplied(targetVersion, Key);
+                    Provider.MigrationUnApplied(targetVersion, Key);
                 }
                 else
                 {
                     MigratorLogManager.Log.MigrateUp(targetVersion, migration.Name);
                     migration.Apply();
-                    provider.MigrationApplied(targetVersion, Key);
+                    Provider.MigrationApplied(targetVersion, Key);
                 }
 
                 if (!migrationInfo.WithoutTransaction)
                 {
-                    provider.Commit();
+                    Provider.Commit();
                 }
             }
             catch (Exception ex)
@@ -154,7 +157,7 @@ namespace ThinkingHome.Migrator
                 if (!migrationInfo.WithoutTransaction)
                 {
                     // ��� ������ ���������� ���������
-                    provider.Rollback();
+                    Provider.Rollback();
                     MigratorLogManager.Log.RollingBack(currentDatabaseVersion);
                 }
 
@@ -199,6 +202,4 @@ namespace ThinkingHome.Migrator
 
         #endregion
     }
-
-    */
 }

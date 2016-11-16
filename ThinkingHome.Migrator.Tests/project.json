@@ -5,6 +5,7 @@
     },
     "dependencies": {
         "NUnit": "3.4.1",
+        "Moq": "4.6.38-alpha",
         "dotnet-test-nunit": "3.4.0-beta-2",
         "ThinkingHome.Migrator": "3.0.0-*",
         "ThinkingHome.Migrator.Framework": "3.0.0-*",

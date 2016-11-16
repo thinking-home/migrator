@@ -56,7 +56,7 @@ namespace ThinkingHome.Migrator.Framework
     /// </code>
     /// </example>
     ///
-    public abstract class Migration : IMigration
+    public abstract class Migration
     {
         /// <summary>
         /// Migration name
