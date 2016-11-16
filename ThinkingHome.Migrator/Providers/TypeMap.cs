@@ -57,22 +57,22 @@ namespace ThinkingHome.Migrator.Providers
         private readonly Dictionary<DbType, string> defaults = new Dictionary<DbType, string>();
 
         /// <summary>
-        /// �������� �������� ��-��������� ��� ����
+        /// Добавить значение по-умолчанию для типа
         /// </summary>
-        /// <param name="typecode">���</param>
-        /// <param name="value">��������</param>
+        /// <param name="typecode">Тип</param>
+        /// <param name="value">Значение</param>
         private void PutDefaultValue(DbType typecode, string value)
         {
             defaults[typecode] = value;
         }
 
         /// <summary>
-        /// �������� �������� ��-���������
+        /// Получить значение по-умолчанию
         /// </summary>
-        /// <param name="typecode">���</param>
+        /// <param name="typecode">Тип</param>
         /// <returns>
-        /// �������� ��-��������� ��� ������� ����.
-        /// ���� �������� ���������� �� �������, ������������ ����������.
+        /// Значение по-умолчанию для данного типа.
+        /// Если значение определить не удалось, генерируется исключение.
         /// </returns>
         private string GetDefaultValue(DbType typecode)
         {
@@ -99,13 +99,13 @@ namespace ThinkingHome.Migrator.Providers
         }
 
         /// <summary>
-        /// ��������� ������ SQL ��� ���� � ������ ��������
+        /// Получение строки SQL для типа с учетом размеров
         /// </summary>
-        /// <param name="typecode">���</param>
-        /// <param name="size">������</param>
+        /// <param name="typecode">Тип</param>
+        /// <param name="size">Размер</param>
         /// <returns>
-        /// ���������� ������ SQL ��� ����, ������������ � ������ ��� ��������.
-        /// ���� ������ SQL ���������� �� �������, ������������ null.
+        /// Возвращает строку SQL для типа, определенную с учетом его размеров.
+        /// Если строку SQL определить не удалось, возвращается null.
         /// </returns>
         private TypeDefinitionInfo GetValue(DbType typecode, int size)
         {
@@ -132,11 +132,11 @@ namespace ThinkingHome.Migrator.Providers
         #region Put
 
         /// <summary>
-        /// ������������ �������� ���� ��, ������� ����� ������������ ���
-        /// ����������� �������� DbType, ���������� � "���������".
-        /// <para><c>$l</c> - ����� �������� �� ���������� �������� �����</para>
-        /// <para><c>$s</c> - ����� �������� �� ���������� ��������, ������������
-        /// ���������� ������ ����� ������� ��� ������������ �����</para>�
+        /// Регистрирует название типа БД, которое будет использовано для
+        /// конкретного значения DbType, указанного в "миграциях".
+        /// <para><c>$l</c> - будет заменено на конкретное значение длины</para>
+        /// <para><c>$s</c> - будет заменено на конкретное значение, показывающее
+        /// количество знаков после запятой для вещественных чисел</para>м
         /// </summary>
         /// <param name="typecode">The typecode</param>
         /// <param name="length">Maximum length of database type</param>
@@ -147,16 +147,16 @@ namespace ThinkingHome.Migrator.Providers
         }
 
         /// <summary>
-        /// ������������ �������� ���� ��, ������� ����� ������������ ���
-        /// ����������� �������� DbType, ���������� � "���������".
-        /// <para><c>$l</c> - ����� �������� �� ���������� �������� �����</para>
-        /// <para><c>$s</c> - ����� �������� �� ���������� ��������, ������������
-        /// ���������� ������ ����� ������� ��� ������������ �����</para>
+        /// Регистрирует название типа БД, которое будет использовано для
+        /// конкретного значения DbType, указанного в "миграциях".
+        /// <para><c>$l</c> - будет заменено на конкретное значение длины</para>
+        /// <para><c>$s</c> - будет заменено на конкретное значение, показывающее
+        /// количество знаков после запятой для вещественных чисел</para>
         /// </summary>
-        /// <param name="typecode">���</param>
-        /// <param name="length">������������ �����</param>
-        /// <param name="name">�������� ���� ��</param>
-        /// <param name="defaultScale">�������� ��-���������: ���������� ������ ����� ������� ��� ������������ �����</param>
+        /// <param name="typecode">Тип</param>
+        /// <param name="length">Максимальная длина</param>
+        /// <param name="name">Название типа БД</param>
+        /// <param name="defaultScale">Значение по-умолчанию: количество знаков после запятой для вещественных чисел</param>
         public void Put(DbType typecode, int? length, string name, int? defaultScale)
         {
             if (length.HasValue)
@@ -171,14 +171,14 @@ namespace ThinkingHome.Migrator.Providers
         }
 
         /// <summary>
-        /// ������������ �������� ���� ��, ������� ����� ������������ ���
-        /// ����������� �������� DbType, ���������� � "���������".
+        /// Регистрирует название типа БД, которое будет использовано для
+        /// конкретного значения DbType, указанного в "миграциях".
         /// </summary>
-        /// <para><c>$l</c> - ����� �������� �� ���������� �������� �����</para>
-        /// <para><c>$s</c> - ����� �������� �� ���������� ��������, ������������
-        /// ���������� ������ ����� ������� ��� ������������ �����</para>
-        /// <param name="typecode">���</param>
-        /// <param name="name">�������� ���� ��</param>
+        /// <para><c>$l</c> - будет заменено на конкретное значение длины</para>
+        /// <para><c>$s</c> - будет заменено на конкретное значение, показывающее
+        /// количество знаков после запятой для вещественных чисел</para>
+        /// <param name="typecode">Тип</param>
+        /// <param name="name">Название типа БД</param>
         public void Put(DbType typecode, string name)
         {
             PutDefaultValue(typecode, name);
@@ -223,9 +223,9 @@ namespace ThinkingHome.Migrator.Providers
         #endregion
 
         /// <summary>
-        /// ��������, ��� �������� ��� ���������������
+        /// Проверка, что заданный тип зарегистрирован
         /// </summary>
-        /// <param name="type">����������� ���</param>
+        /// <param name="type">Проверяемый тип</param>
         public bool HasType(DbType type)
         {
             return typeMapping.ContainsKey(type) || defaults.ContainsKey(type);

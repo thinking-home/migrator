@@ -56,27 +56,18 @@ namespace ThinkingHome.Migrator.Providers
 
         #endregion
 
-        #region ����������� ����
+        #region Особенности СУБД
 
-        public virtual bool IdentityNeedsType
-        {
-            get { return true; }
-        }
+        public virtual bool IdentityNeedsType => true;
 
-        public virtual bool NeedsNotNullForIdentity
-        {
-            get { return true; }
-        }
+        public virtual bool NeedsNotNullForIdentity => true;
 
         public bool TypeIsSupported(DbType type)
         {
             return typeMap.HasType(type);
         }
 
-        protected virtual string NamesQuoteTemplate
-        {
-            get { return "\"{0}\""; }
-        }
+        protected virtual string NamesQuoteTemplate => "\"{0}\"";
 
         #endregion
 
@@ -99,13 +90,13 @@ namespace ThinkingHome.Migrator.Providers
             sqlBuilder.AppendColumnName();
             sqlBuilder.AppendColumnType(IdentityNeedsType);
 
-            // identity �� ��������� � ����
+            // identity не нуждается в типе
             sqlBuilder.AppendSqlForIdentityWhichNotNeedsType(IdentityNeedsType);
             sqlBuilder.AppendUnsignedSql();
             sqlBuilder.AppendNotNullSql(NeedsNotNullForIdentity);
             sqlBuilder.AppendPrimaryKeySql(compoundPrimaryKey);
 
-            // identity ��������� � ����
+            // identity нуждается в типе
             sqlBuilder.AppendSqlForIdentityWhichNeedsType(IdentityNeedsType);
             sqlBuilder.AppendUniqueSql();
             sqlBuilder.AppendDefaultValueSql(GetSqlDefaultValue);
@@ -137,9 +128,9 @@ namespace ThinkingHome.Migrator.Providers
 
         protected virtual string GetSqlChangeNotNullConstraint(SchemaQualifiedObjectName table, string column, bool notNull, ref string sqlChangeColumnType)
         {
-            // ���� ��������� ���� ������� � �������� NOT NULL ���������� ����� ��������,
-            // �� �������� �������� sqlChangeColumnType � ���������� NULL
-            // ����� ���������� ������, �������� ������� NOT NULL
+            // если изменение типа колонки и признака NOT NULL происходит одним запросом,
+            // то изменяем параметр sqlChangeColumnType и возвращаем NULL
+            // иначе возвращаем запрос, меняющий признак NOT NULL
 
             sqlChangeColumnType += notNull ? " NOT NULL" : " NULL";
 
@@ -225,7 +216,7 @@ namespace ThinkingHome.Migrator.Providers
 
         public virtual void AddTable(SchemaQualifiedObjectName name, params Column[] columns)
         {
-            // ������ �������, �������� � ��������� ����
+            // список колонок, входящих в первичный ключ
             List<string> pks = columns
                 .Where(column => column.IsPrimaryKey)
                 .Select(column => column.Name)
@@ -235,7 +226,7 @@ namespace ThinkingHome.Migrator.Providers
 
             var querySections = new List<string>();
 
-            // SQL ��� ������� �������
+            // SQL для колонок таблицы
             foreach (Column column in columns)
             {
                 // Remove the primary key notation if compound primary key because we'll add it back later
@@ -248,7 +239,7 @@ namespace ThinkingHome.Migrator.Providers
                 querySections.Add(columnSql);
             }
 
-            // SQL ��� ���������� ���������� �����
+            // SQL для составного первичного ключа
             if (compoundPrimaryKey)
             {
                 string pkName = "PK_" + name.Name;
