@@ -12,7 +12,7 @@ namespace ThinkingHome.Migrator.Providers
     public abstract class TransformationProvider<TConnection> : SqlRunner, ITransformationProvider
         where TConnection : IDbConnection
     {
-        // todo: ��������� ����� � ��������� ������ ������ + �������� ������������� �������/�������/�������/�����������
+        // todo: проверить схемы в получении списка таблиц + проверке существования таблицы/колонки/индекса/ограничения
         private const string SCHEMA_INFO_TABLE = "SchemaInfo";
 
         protected readonly IFormatProvider sqlFormatProvider;
@@ -24,7 +24,6 @@ namespace ThinkingHome.Migrator.Providers
         protected TransformationProvider(TConnection connection)
             : base(connection)
         {
-            NeedQuotesForNames = true;
             sqlFormatProvider = new SqlFormatter(GetQuotedName);
 
             propertyMap.RegisterPropertySql(ColumnProperty.Null, "NULL");
@@ -40,12 +39,9 @@ namespace ThinkingHome.Migrator.Providers
 
         #region common
 
-        public bool NeedQuotesForNames { get; set; }
-
         protected string GetQuotedName(object name)
         {
-            var format = NeedQuotesForNames ? NamesQuoteTemplate : "{0}";
-            return string.Format(format, name);
+            return string.Format(NamesQuoteTemplate, name);
         }
 
         public string FormatSql(string format, params object[] args)

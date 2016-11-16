@@ -82,14 +82,12 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
 
         public override bool ColumnExists(SchemaQualifiedObjectName table, string column)
         {
-            string nspname = table.SchemaIsEmpty ? "current_schema()" : string.Format("'{0}'", table.Schema);
-            string tablename = NeedQuotesForNames ? table.Name : table.Name.ToLower();
-            string colname = NeedQuotesForNames ? column : column.ToLower();
+            string nspname = table.SchemaIsEmpty ? "current_schema()" : $"'{table.Schema}'";
 
             string sql = FormatSql(
                 "SELECT {0:NAME} FROM {1:NAME}.{2:NAME} WHERE {3:NAME} = {4} AND {5:NAME} = '{6}' AND {7:NAME} = '{8}'",
                 "column_name", "information_schema", "columns", "table_schema",
-                nspname, "table_name", tablename, "column_name", colname);
+                nspname, "table_name", table.Name, "column_name", column);
 
             using (IDataReader reader = ExecuteReader(sql))
             {
@@ -99,14 +97,12 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
 
         public override bool ConstraintExists(SchemaQualifiedObjectName table, string name)
         {
-            string nspname = table.SchemaIsEmpty ? "current_schema()" : string.Format("'{0}'", table.Schema);
-            string tablename = NeedQuotesForNames ? table.Name : table.Name.ToLower();
-            string keyname = NeedQuotesForNames ? name : name.ToLower();
+            string nspname = table.SchemaIsEmpty ? "current_schema()" : $"'{table.Schema}'";
 
             string sql = FormatSql(
                 "SELECT {0:NAME} FROM {1:NAME}.{2:NAME} WHERE {3:NAME} = {4} AND {5:NAME} = '{6}' AND {7:NAME} = '{8}'",
                 "constraint_name", "information_schema", "table_constraints", "table_schema",
-                nspname, "constraint_name", keyname, "table_name", tablename);
+                nspname, "constraint_name", name, "table_name", table.Name);
 
             using (IDataReader reader = ExecuteReader(sql))
             {
@@ -117,8 +113,6 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
         public override bool IndexExists(string indexName, SchemaQualifiedObjectName tableName)
         {
             string nspname = tableName.SchemaIsEmpty ? "current_schema()" : string.Format("'{0}'", tableName.Schema);
-            string tablename = NeedQuotesForNames ? tableName.Name : tableName.Name.ToLower();
-            string indname = NeedQuotesForNames ? indexName : indexName.ToLower();
 
             var builder = new StringBuilder();
 
@@ -129,8 +123,8 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
             builder.Append("LEFT JOIN pg_namespace n ON n.oid = c.relnamespace ");
             builder.Append("WHERE c.relkind = 'i' ");
             builder.AppendFormat("AND n.nspname = {0} ", nspname);
-            builder.AppendFormat("AND c2.relname = '{0}' ", tablename);
-            builder.AppendFormat("AND c.relname = '{0}' ", indname);
+            builder.AppendFormat("AND c2.relname = '{0}' ", tableName.Name);
+            builder.AppendFormat("AND c.relname = '{0}' ", indexName);
 
             int count = Convert.ToInt32(ExecuteScalar(builder.ToString()));
             return count > 0;
@@ -162,11 +156,10 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
         public override bool TableExists(SchemaQualifiedObjectName table)
         {
             string nspname = table.SchemaIsEmpty ? "current_schema()" : string.Format("'{0}'", table.Schema);
-            string tablename = NeedQuotesForNames ? table.Name : table.Name.ToLower();
 
             string sql = FormatSql(
                 "SELECT {0:NAME} FROM {1:NAME}.{2:NAME} WHERE {3:NAME} = {4} AND {5:NAME} = '{6}'",
-                "table_name", "information_schema", "tables", "table_schema", nspname, "table_name", tablename);
+                "table_name", "information_schema", "tables", "table_schema", nspname, "table_name", table.Name);
 
             using (IDataReader reader = ExecuteReader(sql))
             {

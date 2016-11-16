@@ -67,7 +67,6 @@ namespace ThinkingHome.Migrator.Tests
             }
 
             provider = CreateProvider();
-            provider.NeedQuotesForNames = AddQuotes;
         }
 
         [TearDown]
@@ -75,8 +74,6 @@ namespace ThinkingHome.Migrator.Tests
         {
             provider.Dispose();
         }
-
-        protected virtual bool AddQuotes => true;
 
         protected virtual string ResourceSql => "ThinkingHome.Migrator.TestAssembly.Res.test.res.migration.sql";
 
