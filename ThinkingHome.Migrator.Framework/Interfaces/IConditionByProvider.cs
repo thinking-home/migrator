@@ -8,8 +8,6 @@ namespace ThinkingHome.Migrator.Framework.Interfaces
 
         IConditionByProvider For<TProvider>(Action<ITransformationProvider> action);
 
-        IConditionByProvider For(string providerTypeName, Action<ITransformationProvider> action);
-
         IConditionByProvider For(Type providerType, Action<ITransformationProvider> action);
 
         void Else(Action<ITransformationProvider> action);
