@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
-using System.Runtime.Loader;
 using Moq;
 using NUnit.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 
-namespace ThinkingHome.Migrator.Tests.API
+namespace ThinkingHome.Migrator.Tests.Core
 {
     /// <summary>
     /// Проверка выполнения миграций
