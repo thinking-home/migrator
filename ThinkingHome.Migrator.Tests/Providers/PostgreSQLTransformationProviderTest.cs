@@ -28,6 +28,8 @@ namespace ThinkingHome.Migrator.Tests.Providers
             }
         }
 
+        protected override string ResourceSql => "ThinkingHome.Migrator.Tests.TestMigrations.pgsql.test.sql";
+
         protected override string GetSchemaForCompare()
         {
             return provider.ExecuteScalar("select current_schema()").ToString();

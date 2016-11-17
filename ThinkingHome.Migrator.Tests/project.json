@@ -12,6 +12,11 @@
         "ThinkingHome.Migrator.Providers.PostgreSQL": "3.0.0-*"
     },
 
+    "resource": [
+        "TestMigrations/pgsql.test.sql",
+        "TestMigrations/test.sql"
+    ],
+
     "testRunner": "nunit",
 
     "frameworks": {

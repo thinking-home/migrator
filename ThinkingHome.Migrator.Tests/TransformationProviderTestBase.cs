@@ -75,7 +75,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Dispose();
         }
 
-        protected virtual string ResourceSql => "ThinkingHome.Migrator.TestAssembly.Res.test.res.migration.sql";
+        protected virtual string ResourceSql => "ThinkingHome.Migrator.Tests.TestMigrations.test.sql";
 
         protected abstract string BatchSql { get; }
 
@@ -109,23 +109,23 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable("BatchSqlTest");
         }
 
-//        [Test]
-//        public void CanExecuteScriptFromResources()
-//        {
-//            provider.AddTable("TestTwo",
-//                new Column("Id", DbType.Int32, ColumnProperty.PrimaryKey),
-//                new Column("TestId", DbType.Int32));
-//
-//            Assembly asm = Assembly.Load("ECM7.Migrator.TestAssembly");
-//            provider.ExecuteFromResource(asm, ResourceSql);
-//
-//            string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME} WHERE {2:NAME} = {3}",
-//                "TestId", "TestTwo", "Id", 5555);
-//
-//            Assert.AreEqual(9999, provider.ExecuteScalar(sql));
-//
-//            provider.RemoveTable("TestTwo");
-//        }
+        [Test]
+        public void CanExecuteScriptFromResources()
+        {
+            provider.AddTable("TestTwo",
+                new Column("Id", DbType.Int32, ColumnProperty.PrimaryKey),
+                new Column("TestId", DbType.Int32));
+
+            Assembly asm = GetType().GetTypeInfo().Assembly;
+            provider.ExecuteFromResource(asm, ResourceSql);
+
+            string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME} WHERE {2:NAME} = {3}",
+                "TestId", "TestTwo", "Id", 5555);
+
+            Assert.AreEqual(9999, provider.ExecuteScalar(sql));
+
+            provider.RemoveTable("TestTwo");
+        }
 
         #endregion
 
