@@ -1,7 +1,11 @@
 {
     "version": "1.0.0-*",
     "buildOptions": {
-        "debugType": "portable"
+        "debugType": "portable",
+        "embed": [
+            "TestMigrations/pgsql.test.sql",
+            "TestMigrations/test.sql"
+        ]
     },
     "dependencies": {
         "NUnit": "3.4.1",
@@ -11,11 +15,6 @@
         "ThinkingHome.Migrator.Framework": "3.0.0-*",
         "ThinkingHome.Migrator.Providers.PostgreSQL": "3.0.0-*"
     },
-
-    "resource": [
-        "TestMigrations/pgsql.test.sql",
-        "TestMigrations/test.sql"
-    ],
 
     "testRunner": "nunit",
 

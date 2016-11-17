@@ -99,7 +99,7 @@ namespace ThinkingHome.Migrator.Loader
         /// Check for duplicated version in migrations.
         /// </summary>
         /// <exception cref="CheckForDuplicatedVersion">CheckForDuplicatedVersion</exception>
-        private static void CheckForDuplicatedVersion(IEnumerable<long> migrationsTypes)
+        public static void CheckForDuplicatedVersion(IEnumerable<long> migrationsTypes)
         {
             var duplicatedVersions = migrationsTypes
                 .GroupBy(v => v)

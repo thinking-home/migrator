@@ -9,7 +9,7 @@ namespace ThinkingHome.Migrator.Exceptions
     {
         /// <param name="versions">Duplicated version</param>
         public DuplicatedVersionException(params long[] versions)
-            : base($"Migration version #{versions.ToSeparatedString()} is duplicated")
+            : base($"Migration version #{versions.ToSeparatedString()} is duplicated", versions)
         {
         }
     }
