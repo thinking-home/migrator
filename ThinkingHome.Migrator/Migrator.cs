@@ -177,11 +177,11 @@ namespace ThinkingHome.Migrator
             var set = new HashSet<long>(appliedMigrations);
 
             // ��������
-            var list = availableMigrations.Where(x => x < startVersion && !set.Contains(x)).ToList();
+            var list = availableMigrations.Where(x => x < startVersion && !set.Contains(x)).ToArray();
             if (list.Any())
             {
                 throw new VersionException(
-                    "�������� ������������� ��������, ������ ������� ������ ������� ������ ��", list.ToArray());
+                    "�������� ������������� ��������, ������ ������� ������ ������� ������ ��", list);
             }
 
             set.UnionWith(availableMigrations);
