@@ -4,8 +4,8 @@
     "debugType": "portable"
   },
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
-    "System.Data.Common": "4.3.0-preview1-24530-04"
+    "NETStandard.Library": "1.6.1",
+    "System.Data.Common": "4.3.0"
   },
   "frameworks": {
     "netstandard1.6": {

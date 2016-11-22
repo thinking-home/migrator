@@ -4,7 +4,7 @@
     "debugType": "portable"
   },
   "dependencies": {
-    "NETStandard.Library": "1.6.0",
+    "NETStandard.Library": "1.6.1",
     "NLog": "5.0.0-beta03",
     "ThinkingHome.Migrator.Framework": "3.0.0-*"
   },
