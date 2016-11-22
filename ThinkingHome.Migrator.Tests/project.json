@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-alpha1",
+    "version": "3.0.0-alpha2",
     "buildOptions": {
         "debugType": "portable",
         "embed": [
@@ -8,9 +8,9 @@
         ]
     },
     "dependencies": {
-        "NUnit": "3.4.1",
+        "NUnit": "3.5.0",
         "Moq": "4.6.38-alpha",
-        "dotnet-test-nunit": "3.4.0-beta-2",
+        "dotnet-test-nunit": "3.4.0-beta-3",
         "ThinkingHome.Migrator": "3.0.0-*",
         "ThinkingHome.Migrator.Framework": "3.0.0-*",
         "ThinkingHome.Migrator.Providers.PostgreSQL": "3.0.0-*"
