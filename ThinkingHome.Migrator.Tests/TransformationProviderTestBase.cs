@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
@@ -56,7 +57,7 @@ namespace ThinkingHome.Migrator.Tests
 
         protected static bool isInitialized;
 
-        public abstract ITransformationProvider CreateProvider();
+        public abstract ITransformationProvider CreateProvider(ILogger logger = null);
 
         [SetUp]
         public virtual void SetUp()

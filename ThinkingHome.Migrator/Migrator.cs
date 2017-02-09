@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
@@ -23,6 +24,8 @@ namespace ThinkingHome.Migrator
         /// </summary>
         public ITransformationProvider Provider { get; }
 
+        public MigrationLogger Logger { get; }
+
         /// <summary>
         /// Assembly that contains the migrations
         /// </summary>
@@ -41,29 +44,32 @@ namespace ThinkingHome.Migrator
         /// <param name="providerFactoryType">Name or alias of provider factory class</param>
         /// <param name="connection">Instance of database connection</param>
         /// <param name="asm">Assembly that contains migrations</param>
-        public Migrator(string providerFactoryType, IDbConnection connection, Assembly asm)
-            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connection), asm)
+        public Migrator(string providerFactoryType, IDbConnection connection, Assembly asm, ILogger logger = null)
+            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connection, logger), asm, logger)
         {
         }
 
         /// <summary>
         /// �������������
         /// </summary>
-        public Migrator(string providerFactoryType, string connectionString, Assembly asm)
-            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connectionString), asm)
+        public Migrator(string providerFactoryType, string connectionString, Assembly asm, ILogger logger = null)
+            : this(ProviderFactory.Create(providerFactoryType).CreateProvider(connectionString, logger), asm, logger)
         {
         }
 
         /// <summary>
         /// �������������
         /// </summary>
-        public Migrator(ITransformationProvider provider, Assembly asm)
+        public Migrator(ITransformationProvider provider, Assembly asm, ILogger logger = null)
         {
             if (provider == null) throw new ArgumentNullException(nameof(provider));
             if (asm == null) throw new ArgumentNullException(nameof(asm));
 
             Provider = provider;
+            Logger = new MigrationLogger(logger);
+
             migrationAssembly = new MigrationAssembly(asm);
+            Logger.WriteMigrationAssemblyInfo(migrationAssembly);
         }
 
         #endregion
@@ -104,7 +110,7 @@ namespace ThinkingHome.Migrator
             MigrationPlan plan = BuildMigrationPlan(targetVersion, appliedMigrations, availableMigrations);
 
             long currentDatabaseVersion = plan.StartVersion;
-            MigratorLogManager.Log.Started(currentDatabaseVersion, targetVersion);
+            Logger.Started(currentDatabaseVersion, targetVersion);
 
             foreach (long currentExecutedVersion in plan)
             {
@@ -134,13 +140,13 @@ namespace ThinkingHome.Migrator
 
                 if (targetVersion <= currentDatabaseVersion)
                 {
-                    MigratorLogManager.Log.MigrateDown(targetVersion, migration.Name);
+                    Logger.MigrateDown(targetVersion, migration.Name);
                     migration.Revert();
                     Provider.MigrationUnApplied(targetVersion, Key);
                 }
                 else
                 {
-                    MigratorLogManager.Log.MigrateUp(targetVersion, migration.Name);
+                    Logger.MigrateUp(targetVersion, migration.Name);
                     migration.Apply();
                     Provider.MigrationApplied(targetVersion, Key);
                 }
@@ -152,13 +158,14 @@ namespace ThinkingHome.Migrator
             }
             catch (Exception ex)
             {
-                MigratorLogManager.Log.Exception(targetVersion, migration.Name, ex);
+                Logger.Exception(targetVersion, migration.Name, ex);
 
                 if (!migrationInfo.WithoutTransaction)
                 {
-                    // ��� ������ ���������� ���������
+                    // если изменения выполняются в транзакции, откатываем
+                    // изменения текущей миграции, которые успели выполниться
                     Provider.Rollback();
-                    MigratorLogManager.Log.RollingBack(currentDatabaseVersion);
+                    Logger.RollingBack(currentDatabaseVersion);
                 }
 
                 throw;

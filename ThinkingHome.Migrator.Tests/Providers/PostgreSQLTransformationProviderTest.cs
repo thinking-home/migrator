@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Providers.PostgreSQL;
@@ -8,10 +9,10 @@ namespace ThinkingHome.Migrator.Tests.Providers
     [TestFixture, Category("PostgreSQL")]
     public class PostgreSQLTransformationProviderTest : TransformationProviderTestBase
     {
-        public override ITransformationProvider CreateProvider()
+        public override ITransformationProvider CreateProvider(ILogger logger = null)
         {
             return new PostgreSQLProviderFactory()
-                .CreateProvider("host=localhost;port=5432;database=migrations;user name=postgres;password=123");
+                .CreateProvider("host=localhost;port=5432;database=migrations;user name=postgres;password=123", logger);
         }
 
         protected override string BatchSql

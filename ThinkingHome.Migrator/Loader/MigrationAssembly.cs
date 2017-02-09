@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
-using ThinkingHome.Migrator.Framework.Extensions;
 using ThinkingHome.Migrator.Framework.Interfaces;
-using ThinkingHome.Migrator.Logging;
 
 namespace ThinkingHome.Migrator.Loader
 {
@@ -45,11 +42,6 @@ namespace ThinkingHome.Migrator.Loader
             LatestVersion = versions.Any() ? versions.Max() : 0;
         }
 
-        public static MigrationAssembly Load(Assembly asm)
-        {
-            return new MigrationAssembly(asm);
-        }
-
         /// <summary>
         /// Discovers the migration assembly key
         /// </summary>
@@ -59,7 +51,6 @@ namespace ThinkingHome.Migrator.Loader
 
             var assemblyKey = asmAttribute?.Key ?? assembly.FullName;
 
-            MigratorLogManager.Log.Info($"Migration key: {assemblyKey}");
             return assemblyKey;
         }
 
@@ -75,22 +66,12 @@ namespace ThinkingHome.Migrator.Loader
             {
                 var attribute = type.GetTypeInfo().GetCustomAttribute<MigrationAttribute>();
 
-                if (attribute == null || !typeof(Migration).IsAssignableFrom(type) || attribute.Ignore) continue;
+                if (attribute == null || !typeof(Migration).GetTypeInfo().IsAssignableFrom(type) || attribute.Ignore) continue;
 
                 migrations.Add(new MigrationInfo(type));
             }
 
             migrations.Sort(new MigrationInfoComparer());
-
-            // записываем в лог список миграций
-            var msg = new StringBuilder("Loaded migrations:").AppendLine();
-
-            foreach (var mi in migrations)
-            {
-                msg.AppendLine($"{mi.Version.ToString().PadLeft(5)} {mi.Type.Name.ToHumanName()}");
-            }
-
-            MigratorLogManager.Log.Info(msg.ToString());
 
             return migrations;
         }

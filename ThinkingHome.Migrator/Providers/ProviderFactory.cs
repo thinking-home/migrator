@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Data;
+using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework.Interfaces;
 
 namespace ThinkingHome.Migrator.Providers
 {
     public interface IProviderFactory
     {
-        ITransformationProvider CreateProvider(string connectionString);
-        ITransformationProvider CreateProvider(IDbConnection connection);
+        ITransformationProvider CreateProvider(string connectionString, ILogger logger);
+        ITransformationProvider CreateProvider(IDbConnection connection, ILogger logger);
         IDbConnection CreateConnection(string connectionString);
     }
 
@@ -33,7 +34,7 @@ namespace ThinkingHome.Migrator.Providers
         where TProvider : TransformationProvider<TConnection>
         where TConnection : IDbConnection
     {
-        protected abstract TProvider CreateProviderInternal(TConnection connection);
+        protected abstract TProvider CreateProviderInternal(TConnection connection, ILogger logger);
         protected abstract TConnection CreateConnectionInternal(string connectionString);
 
         public IDbConnection CreateConnection(string connectionString)
@@ -41,18 +42,18 @@ namespace ThinkingHome.Migrator.Providers
             return CreateConnectionInternal(connectionString);
         }
 
-        public ITransformationProvider CreateProvider(IDbConnection connection)
+        public ITransformationProvider CreateProvider(IDbConnection connection, ILogger logger)
         {
             if (!(connection is TConnection)) throw new InvalidCastException();
 
-            return CreateProviderInternal((TConnection) connection);
+            return CreateProviderInternal((TConnection) connection, logger);
         }
 
-        public ITransformationProvider CreateProvider(string connectionString)
+        public ITransformationProvider CreateProvider(string connectionString, ILogger logger)
         {
             var connection = CreateConnectionInternal(connectionString);
 
-            return CreateProviderInternal(connection);
+            return CreateProviderInternal(connection, logger);
         }
     }
 }

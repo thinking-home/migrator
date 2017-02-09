@@ -3,6 +3,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Logging;
 
@@ -10,11 +11,12 @@ namespace ThinkingHome.Migrator.Providers
 {
     public class SqlRunner : IDisposable
     {
-        protected SqlRunner(IDbConnection connection)
+        protected SqlRunner(IDbConnection connection, ILogger logger)
         {
             if (connection == null) throw new ArgumentNullException(nameof(connection));
 
             Connection = connection;
+            Logger = new MigrationLogger(logger);
         }
 
         private bool connectionNeedClose;
@@ -24,6 +26,8 @@ namespace ThinkingHome.Migrator.Providers
         public int CommandTimeout { get; set; }
 
         public IDbConnection Connection { get; }
+
+        public MigrationLogger Logger { get; }
 
         public virtual string BatchSeparator => null;
 
@@ -36,7 +40,7 @@ namespace ThinkingHome.Migrator.Providers
 
             try
             {
-                MigratorLogManager.Log.ExecuteSql(sql);
+                Logger.ExecuteSql(sql);
                 cmd = GetCommand(sql);
                 reader = OpenDataReader(cmd);
                 return reader;
@@ -47,7 +51,7 @@ namespace ThinkingHome.Migrator.Providers
 
                 if (cmd != null)
                 {
-                    MigratorLogManager.Log.Warn($"query failed: {cmd.CommandText}");
+                    Logger.Warn($"query failed: {cmd.CommandText}");
                     cmd.Dispose();
                 }
 
@@ -61,12 +65,12 @@ namespace ThinkingHome.Migrator.Providers
             {
                 try
                 {
-                    MigratorLogManager.Log.ExecuteSql(sql);
+                    Logger.ExecuteSql(sql);
                     return cmd.ExecuteScalar();
                 }
                 catch (Exception ex)
                 {
-                    MigratorLogManager.Log.Warn($"Query failed: {cmd.CommandText}");
+                    Logger.Warn($"Query failed: {cmd.CommandText}");
                     throw new SQLException(ex);
                 }
             }
@@ -113,7 +117,7 @@ namespace ThinkingHome.Migrator.Providers
             }
             catch (Exception ex)
             {
-                MigratorLogManager.Log.Warn(ex);
+                Logger.Warn($"Sql query failed: \n{sql}");
                 throw new SQLException(ex);
             }
 
@@ -166,7 +170,7 @@ namespace ThinkingHome.Migrator.Providers
                 }
                 catch (Exception ex)
                 {
-                    MigratorLogManager.Log.Error(ex, "Failed to apply the transaction");
+                    Logger.Error("Failed to apply the transaction", ex);
                 }
             }
 
@@ -186,7 +190,7 @@ namespace ThinkingHome.Migrator.Providers
                 }
                 catch (Exception ex)
                 {
-                    MigratorLogManager.Log.Error(ex, "Failed to rollback the transaction");
+                    Logger.Error("Failed to rollback the transaction", ex);
                 }
             }
 
@@ -208,7 +212,7 @@ namespace ThinkingHome.Migrator.Providers
 
         private int ExecuteNonQueryInternal(string sql)
         {
-            MigratorLogManager.Log.ExecuteSql(sql);
+            Logger.ExecuteSql(sql);
 
             using (IDbCommand cmd = GetCommand(sql))
             {

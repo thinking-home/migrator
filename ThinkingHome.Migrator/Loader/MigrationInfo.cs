@@ -21,7 +21,7 @@ namespace ThinkingHome.Migrator.Loader
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!typeof(Migration).IsAssignableFrom(type))
+            if (!typeof(Migration).GetTypeInfo().IsAssignableFrom(type))
             {
                 throw new InvalidCastException(
                     "Migration class should be inherited from the ThinkingHome.Migrator.Framework.Migration class");

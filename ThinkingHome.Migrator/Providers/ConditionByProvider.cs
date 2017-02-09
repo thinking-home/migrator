@@ -27,7 +27,7 @@ namespace ThinkingHome.Migrator.Providers
         {
             if (providerType == null) throw new ArgumentNullException(nameof(providerType));
 
-            if (!typeof(ITransformationProvider).IsAssignableFrom(providerType))
+            if (!typeof(ITransformationProvider).GetTypeInfo().IsAssignableFrom(providerType))
             {
                 throw new InvalidCastException("Provider class must implement the ITransformationProvider interface");
             }
@@ -42,7 +42,7 @@ namespace ThinkingHome.Migrator.Providers
         {
             ValidateProviderType(providerType);
 
-            bool needExecute = providerType.IsInstanceOfType(currentProvider);
+            bool needExecute = providerType.GetTypeInfo().IsInstanceOfType(currentProvider);
 
             if (needExecute)
             {

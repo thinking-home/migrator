@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Extensions;
@@ -10,7 +11,7 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
 {
     public class PostgreSQLTransformationProvider : TransformationProvider<NpgsqlConnection>
     {
-        public PostgreSQLTransformationProvider(NpgsqlConnection connection) : base(connection)
+        public PostgreSQLTransformationProvider(NpgsqlConnection connection, ILogger logger) : base(connection, logger)
         {
             typeMap.Put(DbType.AnsiStringFixedLength, "char(255)");
             typeMap.Put(DbType.AnsiStringFixedLength, 8000, "char($l)");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Extensions;
 using ThinkingHome.Migrator.Framework.Interfaces;
@@ -21,8 +22,8 @@ namespace ThinkingHome.Migrator.Providers
         protected readonly ForeignKeyActionMap fkActionMap = new ForeignKeyActionMap();
 
 
-        protected TransformationProvider(TConnection connection)
-            : base(connection)
+        protected TransformationProvider(TConnection connection, ILogger logger)
+            : base(connection, logger)
         {
             sqlFormatProvider = new SqlFormatter(GetQuotedName);
 

@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Moq;
-using NLog.Layouts;
-using NLog.Targets;
 using NUnit.Framework;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Loader;
-using ThinkingHome.Migrator.Logging;
 using ThinkingHome.Migrator.Tests.TestMigrations;
 
 namespace ThinkingHome.Migrator.Tests.Core
@@ -80,7 +77,8 @@ namespace ThinkingHome.Migrator.Tests.Core
         [Test]
         public void LaseVersionIsZeroIfNoMigrations()
         {
-            Assembly assembly = typeof(Migration).GetTypeInfo().Assembly; // ��������� ������� ������ - � ��� ��� ��������
+            Assembly assembly =
+                typeof(Migration).GetTypeInfo().Assembly; // ��������� ������� ������ - � ��� ��� ��������
             MigrationAssembly migrationAssembly = new MigrationAssembly(assembly);
             Assert.AreEqual(0, migrationAssembly.LatestVersion);
         }
@@ -91,10 +89,10 @@ namespace ThinkingHome.Migrator.Tests.Core
         [Test]
         public void CheckForDuplicatedVersion()
         {
-            var versions = new long[] { 1, 2, 3, 4, 2, 4 };
+            var versions = new long[] {1, 2, 3, 4, 2, 4};
 
             var ex = Assert.Throws<DuplicatedVersionException>(() =>
-                    MigrationAssembly.CheckForDuplicatedVersion(versions));
+                MigrationAssembly.CheckForDuplicatedVersion(versions));
 
             Assert.AreEqual(2, ex.Versions.Length);
             Assert.That(ex.Versions.Contains(2));
@@ -123,18 +121,17 @@ namespace ThinkingHome.Migrator.Tests.Core
         [Test]
         public void MigrationsMustBeSortedByNumber()
         {
-            var target = new MemoryTarget { Name = MigratorLogManager.LOGGER_NAME, Layout = new SimpleLayout("${message}") };
-            MigratorLogManager.SetNLogTarget(target);
-
             Assembly assembly = GetType().GetTypeInfo().Assembly;
             var asm = new MigrationAssembly(assembly);
 
-            var list = target.Logs
-                .Where(str => str.StartsWith("Loaded migrations:"))
-                .ToList();
+            var expected = new[] {1, 2, 4};
 
-            Assert.AreEqual(1, list.Count);
-            Assert.AreEqual("Loaded migrations:\n    1 Test migration01\n    2 Test migration02\n    4 Test migration04\n", list[0]);
+            Assert.AreEqual(expected.Length, asm.MigrationsTypes.Count);
+
+            for (var i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], asm.MigrationsTypes[i].Version);
+            }
         }
     }
 }
