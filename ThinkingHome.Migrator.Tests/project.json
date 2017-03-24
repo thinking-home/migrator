@@ -12,9 +12,10 @@
         "Moq": "4.6.38-alpha",
         "dotnet-test-nunit": "3.4.0-beta-3",
         "Microsoft.Extensions.Logging": "1.1.0",
-        "ThinkingHome.Migrator": "3.0.0-*",
-        "ThinkingHome.Migrator.Framework": "3.0.0-*",
-        "ThinkingHome.Migrator.Providers.PostgreSQL": "3.0.0-*"
+        "ThinkingHome.Migrator": { "target": "project" },
+        "ThinkingHome.Migrator.Framework": { "target": "project" },
+        "ThinkingHome.Migrator.Providers.SQLite": { "target": "project" },
+        "ThinkingHome.Migrator.Providers.PostgreSQL": { "target": "project" }
     },
 
     "testRunner": "nunit",

@@ -7,7 +7,7 @@
     "NETStandard.Library": "1.6.1",
     "Microsoft.Extensions.Logging": "1.1.0",
     "Npgsql": "3.1.9",
-    "ThinkingHome.Migrator": "3.0.0-*"
+    "ThinkingHome.Migrator": { "target": "project" }
   },
   "frameworks": {
     "netstandard1.6": {
