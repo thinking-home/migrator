@@ -1,0 +1,17 @@
+﻿{
+  "version": "3.0.0-alpha3",
+  "buildOptions": {
+    "debugType": "portable"
+  },
+  "dependencies": {
+    "NETStandard.Library": "1.6.1",
+    "Microsoft.Extensions.Logging": "1.1.0",
+    "Microsoft.Data.SQLite": "1.1.0",
+    "ThinkingHome.Migrator": "3.0.0-*"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
