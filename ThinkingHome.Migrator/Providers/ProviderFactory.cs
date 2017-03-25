@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework.Interfaces;
 
@@ -16,7 +18,7 @@ namespace ThinkingHome.Migrator.Providers
     {
         public static IProviderFactory Create(string factoryName)
         {
-            throw new NotImplementedException();
+            return Create(GetFactoryType(factoryName));
         }
 
         public static IProviderFactory Create<TFactory>() where TFactory : IProviderFactory
@@ -26,8 +28,43 @@ namespace ThinkingHome.Migrator.Providers
 
         public static IProviderFactory Create(Type factoryType)
         {
-            throw new NotImplementedException();
+            if (!typeof(IProviderFactory).GetTypeInfo().IsAssignableFrom(factoryType))
+            {
+                throw new Exception($"The factory class ({factoryType.FullName}) must implement the IProviderFactory interface");
+            }
+
+            var factory = Activator.CreateInstance(factoryType) as IProviderFactory;
+
+            if (factory == null) throw new Exception("Could not create a provider factory.");
+
+            return factory;
         }
+
+        #region shortcuts
+
+        private static readonly Dictionary<string, string> shortcuts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "postgres", "ThinkingHome.Migrator.Providers.PostgreSQL.PostgreSQLProviderFactory, ThinkingHome.Migrator.Providers.PostgreSQL" },
+            { "sqlite",   "ThinkingHome.Migrator.Providers.SQLite.SQLiteProviderFactory, ThinkingHome.Migrator.Providers.SQLite" }
+        };
+
+        public static Type GetFactoryType(string factoryName)
+        {
+            string factoryTypeName = shortcuts.ContainsKey(factoryName)
+                ? shortcuts[factoryName]
+                : factoryName;
+
+            Type factoryType = Type.GetType(factoryTypeName);
+
+            if (factoryType == null)
+            {
+                throw new Exception($"Could not load factory class: {factoryName ?? "null"}");
+            }
+
+            return factoryType;
+        }
+
+        #endregion
     }
 
     public abstract class ProviderFactory<TProvider, TConnection> : IProviderFactory
