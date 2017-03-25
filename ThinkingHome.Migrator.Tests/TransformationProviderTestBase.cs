@@ -128,6 +128,25 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable("TestTwo");
         }
 
+        [Test]
+        public virtual void CanUseTransactions()
+        {
+            provider.BeginTransaction();
+            provider.AddTable("transtest", new Column("id", DbType.Int32));
+            provider.Commit();
+            Assert.IsTrue(provider.TableExists("transtest"));
+            provider.RemoveTable("transtest");
+        }
+
+        [Test]
+        public virtual void CanRollbackTransactions()
+        {
+            provider.BeginTransaction();
+            provider.AddTable("transtest", new Column("id", DbType.Int32));
+            provider.Rollback();
+            Assert.IsFalse(provider.TableExists("transtest"));
+        }
+
         #endregion
 
         #region table

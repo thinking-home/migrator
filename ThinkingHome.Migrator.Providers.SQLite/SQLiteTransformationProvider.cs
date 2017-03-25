@@ -40,6 +40,8 @@ namespace ThinkingHome.Migrator.Providers.SQLite
 
         #region DBMS features
 
+        public override IsolationLevel IsolationLevel => IsolationLevel.Serializable;
+
         public override bool NeedsNotNullForIdentity => false;
 
         protected override string NamesQuoteTemplate => "[{0}]";

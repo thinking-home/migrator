@@ -31,6 +31,8 @@ namespace ThinkingHome.Migrator.Providers
 
         public virtual string BatchSeparator => null;
 
+        public virtual IsolationLevel IsolationLevel => IsolationLevel.ReadCommitted;
+
         #region public methods
 
         public IDataReader ExecuteReader(string sql)
@@ -153,7 +155,7 @@ namespace ThinkingHome.Migrator.Providers
             if (transaction == null && Connection != null)
             {
                 EnsureHasConnection();
-                transaction = Connection.BeginTransaction(IsolationLevel.ReadCommitted);
+                transaction = Connection.BeginTransaction(IsolationLevel);
             }
         }
 

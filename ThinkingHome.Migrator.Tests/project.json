@@ -1,5 +1,5 @@
 {
-    "version": "3.0.0-alpha5",
+    "version": "3.0.0-alpha7",
     "buildOptions": {
         "debugType": "portable",
         "embed": [
