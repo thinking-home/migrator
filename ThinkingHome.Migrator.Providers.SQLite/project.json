@@ -1,12 +1,12 @@
 ﻿{
-  "version": "3.0.0-alpha4",
+  "version": "3.0.0-alpha5",
   "buildOptions": {
     "debugType": "portable"
   },
   "dependencies": {
     "NETStandard.Library": "1.6.1",
     "Microsoft.Extensions.Logging": "1.1.0",
-    "Microsoft.Data.SQLite": "1.1.0",
+    "Microsoft.Data.Sqlite": "1.1.0",
     "ThinkingHome.Migrator": { "target": "project" }
   },
   "frameworks": {
