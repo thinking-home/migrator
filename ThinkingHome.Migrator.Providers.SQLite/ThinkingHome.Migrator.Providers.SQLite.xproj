@@ -7,7 +7,7 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}</ProjectGuid>
+    <ProjectGuid>{7307743A-8D22-40C9-B56D-7C3D6B975EDD}</ProjectGuid>
     <ProjectTypeGuids>{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}</ProjectTypeGuids>
     <RootNamespace>ThinkingHome.Migrator.Providers.SQLite</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
