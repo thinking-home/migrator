@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VersionPrefix>3.0.0-alpha8</VersionPrefix>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>ThinkingHome.Migrator</AssemblyName>
+    <PackageId>ThinkingHome.Migrator</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0-preview2-25401-01</NetStandardImplicitPackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ThinkingHome.Migrator.Framework/ThinkingHome.Migrator.Framework.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0-preview2-final" />
+  </ItemGroup>
+</Project>

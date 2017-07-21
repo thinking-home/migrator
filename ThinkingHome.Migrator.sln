@@ -1,17 +1,17 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.0.0
-MinimumVisualStudioVersion = 10.0.0.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThinkingHome.Migrator", "ThinkingHome.Migrator/ThinkingHome.Migrator.xproj", "{42FE7FAC-D9B8-4F7E-B5AD-EAE23B109541}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.26114.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator", "ThinkingHome.Migrator\ThinkingHome.Migrator.csproj", "{42FE7FAC-D9B8-4F7E-B5AD-EAE23B109541}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThinkingHome.Migrator.Framework", "ThinkingHome.Migrator.Framework\ThinkingHome.Migrator.Framework.xproj", "{CFFBF49E-5B72-4595-AD3C-64467CB57A3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Framework", "ThinkingHome.Migrator.Framework\ThinkingHome.Migrator.Framework.csproj", "{CFFBF49E-5B72-4595-AD3C-64467CB57A3D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThinkingHome.Migrator.Providers.PostgreSQL", "ThinkingHome.Migrator.Providers.PostgreSQL\ThinkingHome.Migrator.Providers.PostgreSQL.xproj", "{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.PostgreSQL", "ThinkingHome.Migrator.Providers.PostgreSQL\ThinkingHome.Migrator.Providers.PostgreSQL.csproj", "{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThinkingHome.Migrator.Tests", "ThinkingHome.Migrator.Tests\ThinkingHome.Migrator.Tests.xproj", "{ECCAA5B6-B0C0-419A-8B32-CA61BE11F731}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Tests", "ThinkingHome.Migrator.Tests\ThinkingHome.Migrator.Tests.csproj", "{ECCAA5B6-B0C0-419A-8B32-CA61BE11F731}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThinkingHome.Migrator.Providers.SQLite", "ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.xproj", "{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SQLite", "ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj", "{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

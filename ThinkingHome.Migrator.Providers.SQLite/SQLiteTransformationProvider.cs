@@ -4,6 +4,7 @@ using System.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework;
+using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstraint;
 
 namespace ThinkingHome.Migrator.Providers.SQLite
 {

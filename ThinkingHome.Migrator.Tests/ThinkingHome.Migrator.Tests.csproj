@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VersionPrefix>3.0.0-alpha8</VersionPrefix>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>ThinkingHome.Migrator.Tests</AssemblyName>
+    <PackageId>ThinkingHome.Migrator.Tests</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <RuntimeFrameworkVersion>2.0.0-preview2-25407-01</RuntimeFrameworkVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestMigrations\pgsql.test.sql;TestMigrations\test.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ThinkingHome.Migrator/ThinkingHome.Migrator.csproj" />
+    <ProjectReference Include="../ThinkingHome.Migrator.Framework/ThinkingHome.Migrator.Framework.csproj" />
+    <ProjectReference Include="../ThinkingHome.Migrator.Providers.SQLite/ThinkingHome.Migrator.Providers.SQLite.csproj" />
+    <ProjectReference Include="../ThinkingHome.Migrator.Providers.PostgreSQL/ThinkingHome.Migrator.Providers.PostgreSQL.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
+    <PackageReference Include="Moq" Version="4.7.99" />
+    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-3" />
+    <PackageReference Include="NUnit" Version="3.7.1" />
+  </ItemGroup>
+</Project>

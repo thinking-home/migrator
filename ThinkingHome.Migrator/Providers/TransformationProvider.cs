@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Extensions;
 using ThinkingHome.Migrator.Framework.Interfaces;
+using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstraint;
 
 namespace ThinkingHome.Migrator.Providers
 {

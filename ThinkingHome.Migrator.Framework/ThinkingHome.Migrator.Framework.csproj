@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <VersionPrefix>3.0.0-alpha8</VersionPrefix>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>ThinkingHome.Migrator.Framework</AssemblyName>
+    <PackageId>ThinkingHome.Migrator.Framework</PackageId>
+    <NetStandardImplicitPackageVersion>2.0.0-preview2-25401-01</NetStandardImplicitPackageVersion>
+  </PropertyGroup>
+</Project>

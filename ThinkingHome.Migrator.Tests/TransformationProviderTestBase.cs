@@ -9,6 +9,7 @@ using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Framework.Extensions;
+using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstraint;
 
 namespace ThinkingHome.Migrator.Tests
 {
