@@ -1,8 +1,5 @@
-﻿using NUnit.Framework;
-
-namespace ThinkingHome.Migrator.Tests.Providers.WithSchema
+﻿namespace ThinkingHome.Migrator.Tests.Providers.WithSchema
 {
-    [TestFixture, Category("PostgreSQL")]
     public class PostgreSQLTransformationProvidersSchemaTest : PostgreSQLTransformationProviderTest
     {
         protected override string GetSchemaForCreateTables()

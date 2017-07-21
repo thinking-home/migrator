@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
@@ -12,10 +12,9 @@ using ThinkingHome.Migrator.Tests.TestMigrations;
 
 namespace ThinkingHome.Migrator.Tests.Core
 {
-    [TestFixture]
     public class MigrationAssemblyTest
     {
-        [Test]
+        [Fact]
         public void CanLoadMigrationsWithKey()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
@@ -23,18 +22,18 @@ namespace ThinkingHome.Migrator.Tests.Core
 
             IList<long> list = migrationAssembly.MigrationsTypes.Select(x => x.Version).ToList();
 
-            Assert.AreEqual("test-key111", migrationAssembly.Key);
+            Assert.Equal("test-key111", migrationAssembly.Key);
 
-            Assert.AreEqual(3, list.Count);
-            Assert.IsTrue(list.Contains(1));
-            Assert.IsTrue(list.Contains(2));
-            Assert.IsTrue(list.Contains(4));
+            Assert.Equal(3, list.Count);
+            Assert.True(list.Contains(1));
+            Assert.True(list.Contains(2));
+            Assert.True(list.Contains(4));
         }
 
         /// <summary>
         /// ��������, ��� ��� ���������� �������� � �������� ������� ������������ ����������
         /// </summary>
-        [Test]
+        [Fact]
         public void ThrowIfNoMigrationForVersion()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
@@ -47,7 +46,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// �������� ��������� ����������, ���� �� ������ ��������� ����
         /// </summary>
-        [Test]
+        [Fact]
         public void ForNullProviderShouldThrowException()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
@@ -62,31 +61,31 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// �������� ������������ ����������� ��������� ��������� ������
         /// </summary>
-        [Test]
+        [Fact]
         public void LastVersion()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
             MigrationAssembly migrationAssembly = new MigrationAssembly(assembly);
-            Assert.AreEqual(4, migrationAssembly.LatestVersion);
+            Assert.Equal(4, migrationAssembly.LatestVersion);
         }
 
         /// <summary>
         /// ��������, ��� ��� ���������� �������� ��������� ��������� ������ == 0
         /// (��������� �� ��������������� �����)
         /// </summary>
-        [Test]
+        [Fact]
         public void LaseVersionIsZeroIfNoMigrations()
         {
             Assembly assembly =
                 typeof(Migration).GetTypeInfo().Assembly; // ��������� ������� ������ - � ��� ��� ��������
             MigrationAssembly migrationAssembly = new MigrationAssembly(assembly);
-            Assert.AreEqual(0, migrationAssembly.LatestVersion);
+            Assert.Equal(0, migrationAssembly.LatestVersion);
         }
 
         /// <summary>
         /// �������� ����������� �� ���������� ������� ������
         /// </summary>
-        [Test]
+        [Fact]
         public void CheckForDuplicatedVersion()
         {
             var versions = new long[] {1, 2, 3, 4, 2, 4};
@@ -94,15 +93,15 @@ namespace ThinkingHome.Migrator.Tests.Core
             var ex = Assert.Throws<DuplicatedVersionException>(() =>
                 MigrationAssembly.CheckForDuplicatedVersion(versions));
 
-            Assert.AreEqual(2, ex.Versions.Length);
-            Assert.That(ex.Versions.Contains(2));
-            Assert.That(ex.Versions.Contains(4));
+            Assert.Equal(2, ex.Versions.Length);
+            Assert.True(ex.Versions.Contains(2));
+            Assert.True(ex.Versions.Contains(4));
         }
 
         /// <summary>
         /// �������� �������� ������� �������� �� ������ ������
         /// </summary>
-        [Test]
+        [Fact]
         public void CanCreateMigrationObject()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
@@ -113,12 +112,12 @@ namespace ThinkingHome.Migrator.Tests.Core
             var mi = migrationAssembly.GetMigrationInfo(2);
             Migration migration = migrationAssembly.InstantiateMigration(mi, provider.Object);
 
-            Assert.IsNotNull(migration);
-            Assert.That(migration is TestMigration02);
-            Assert.AreSame(provider.Object, migration.Database);
+            Assert.NotNull(migration);
+            Assert.True(migration is TestMigration02);
+            Assert.Same(provider.Object, migration.Database);
         }
 
-        [Test]
+        [Fact]
         public void MigrationsMustBeSortedByNumber()
         {
             Assembly assembly = GetType().GetTypeInfo().Assembly;
@@ -126,11 +125,11 @@ namespace ThinkingHome.Migrator.Tests.Core
 
             var expected = new[] {1, 2, 4};
 
-            Assert.AreEqual(expected.Length, asm.MigrationsTypes.Count);
+            Assert.Equal(expected.Length, asm.MigrationsTypes.Count);
 
             for (var i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(expected[i], asm.MigrationsTypes[i].Version);
+                Assert.Equal(expected[i], asm.MigrationsTypes[i].Version);
             }
         }
     }

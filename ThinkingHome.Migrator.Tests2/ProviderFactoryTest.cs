@@ -1,25 +1,24 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using ThinkingHome.Migrator.Providers;
 using ThinkingHome.Migrator.Providers.PostgreSQL;
 using ThinkingHome.Migrator.Providers.SQLite;
 
 namespace ThinkingHome.Migrator.Tests
 {
-    [TestFixture]
     public class ProviderFactoryTest
     {
         #region Shortcuts tests
 
-        [Test, Category("PostgreSQL")]
+        [Fact]
         public void PostgreSQLShortcutTest()
         {
-            Assert.That(ProviderFactory.Create("PostgreS") is PostgreSQLProviderFactory);
+            Assert.True(ProviderFactory.Create("PostgreS") is PostgreSQLProviderFactory);
         }
 
-        [Test, Category("SQLite")]
+        [Fact]
         public void SQLiteShortcutTest()
         {
-            Assert.That(ProviderFactory.Create("SQLite") is SQLiteProviderFactory);
+            Assert.True(ProviderFactory.Create("SQLite") is SQLiteProviderFactory);
         }
 
         #endregion

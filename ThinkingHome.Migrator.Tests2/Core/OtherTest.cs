@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Data;
-using NUnit.Framework;
+using Xunit;
 using ThinkingHome.Migrator.Framework.Extensions;
 using ThinkingHome.Migrator.Providers;
 
 namespace ThinkingHome.Migrator.Tests.Core
 {
-    [TestFixture]
     public class OtherTest
     {
-        [Test]
+        [Fact]
         public void CanGetMigrationHumanName()
         {
-            Assert.AreEqual(
+            Assert.Equal(
                 "Migration0101 add new table with primary key",
                 "Migration0101_Add_NewTable_with_primary___Key".ToHumanName());
         }
@@ -35,14 +34,14 @@ namespace ThinkingHome.Migrator.Tests.Core
             }
         }
 
-        [Test]
+        [Fact]
         public void CanConvertNullObjectToArrays()
         {
             var arrays = TransformationProvider<IDbConnection>.ConvertObjectToArrays(null);
-            Assert.IsNull(arrays);
+            Assert.Null(arrays);
         }
 
-        [Test]
+        [Fact]
         public void CanConvertObjectWithIndexedFieldToArrays()
         {
             var obj = new Gwelkghlw
@@ -54,19 +53,19 @@ namespace ThinkingHome.Migrator.Tests.Core
 
             var arrays = TransformationProvider<IDbConnection>.ConvertObjectToArrays(obj);
 
-            Assert.AreEqual(new[] { "Id" }, arrays.Item1);
-            Assert.AreEqual(new[] { "1254" }, arrays.Item2);
+            Assert.Equal(new[] { "Id" }, arrays.Item1);
+            Assert.Equal(new[] { "1254" }, arrays.Item2);
         }
 
-        [Test]
+        [Fact]
         public void CanConvertObjectWithNullFieldToArrays()
         {
             var obj = new { x = 1254, y = (object)null, z = (string)null };
 
             var arrays = TransformationProvider<IDbConnection>.ConvertObjectToArrays(obj);
 
-            Assert.AreEqual(new[] { "x", "y", "z" }, arrays.Item1);
-            Assert.AreEqual(new[] { "1254", null, null }, arrays.Item2);
+            Assert.Equal(new[] { "x", "y", "z" }, arrays.Item1);
+            Assert.Equal(new[] { "1254", null, null }, arrays.Item2);
         }
 
         #endregion

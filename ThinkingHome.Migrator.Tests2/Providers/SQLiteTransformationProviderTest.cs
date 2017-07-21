@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Data;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
+using Xunit;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Providers.SQLite;
 
 namespace ThinkingHome.Migrator.Tests.Providers
 {
-    [TestFixture, Category("SQLite")]
     public class SQLiteTransformationProviderTest
         : TransformationProviderTestBase
     {
@@ -25,148 +24,142 @@ namespace ThinkingHome.Migrator.Tests.Providers
             return string.Empty;
         }
 
-        protected override string BatchSql
-        {
-            get
-            {
-                return @"
-				insert into [BatchSqlTest] ([Id], [TestId]) values (11, 111);
-				insert into [BatchSqlTest] ([Id], [TestId]) values (22, 222);
-				insert into [BatchSqlTest] ([Id], [TestId]) values (33, 333);
-				";
-            }
-        }
+        protected override string BatchSql => @"
+			insert into [BatchSqlTest] ([Id], [TestId]) values (11, 111);
+            insert into [BatchSqlTest] ([Id], [TestId]) values (22, 222);
+            insert into [BatchSqlTest] ([Id], [TestId]) values (33, 333);
+            ";
 
         #endregion
 
         #region foreign keys
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKey()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKey);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKey);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithDeleteCascade()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithDeleteCascade);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithDeleteCascade);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithDeleteSetDefault()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithDeleteSetDefault);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithDeleteSetDefault);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithDeleteSetNull()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithDeleteSetNull);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithDeleteSetNull);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithUpdateCascade()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithUpdateCascade);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithUpdateCascade);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithUpdateSetDefault()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithUpdateSetDefault);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithUpdateSetDefault);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddForeignKeyWithUpdateSetNull()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithUpdateSetNull);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddForeignKeyWithUpdateSetNull);
         }
 
         // check constraints
-        [Test]
+        [Fact]
         public override void CanAddCheckConstraint()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddCheckConstraint);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddCheckConstraint);
         }
 
-        [Test]
+        [Fact]
         public override void CanVerifyThatCheckConstraintIsExist()
         {
-            Assert.Throws<NotSupportedException>(base.CanVerifyThatCheckConstraintIsExist);
+            Assert.Throws<NotSupportedException>((Action)base.CanVerifyThatCheckConstraintIsExist);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddComplexForeignKey()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddComplexForeignKey);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddComplexForeignKey);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddComplexUniqueConstraint()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddComplexUniqueConstraint);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddComplexUniqueConstraint);
         }
 
-        [Test]
+        [Fact]
         public override void CanAddPrimaryKey()
         {
-            Assert.Throws<NotSupportedException>(base.CanAddPrimaryKey);
+            Assert.Throws<NotSupportedException>((Action)base.CanAddPrimaryKey);
         }
 
-        [Test]
+        [Fact]
         public override void CanCheckThatPrimaryKeyIsExist()
         {
-            Assert.Throws<NotSupportedException>(base.CanCheckThatPrimaryKeyIsExist);
+            Assert.Throws<NotSupportedException>((Action)base.CanCheckThatPrimaryKeyIsExist);
         }
 
-        [Test]
+        [Fact]
         public override void CanCheckThatUniqueConstraintIsExist()
         {
-            Assert.Throws<NotSupportedException>(base.CanCheckThatUniqueConstraintIsExist);
+            Assert.Throws<NotSupportedException>((Action)base.CanCheckThatUniqueConstraintIsExist);
         }
 
         #endregion
 
         #region change column
 
-        [Test]
+        [Fact]
         public override void CanChangeColumnType()
         {
-            Assert.Throws<NotSupportedException>(base.CanChangeColumnType);
+            Assert.Throws<NotSupportedException>((Action)base.CanChangeColumnType);
         }
 
-        [Test]
+        [Fact]
         public override void CanChangeDefaultValueForColumn()
         {
-            Assert.Throws<NotSupportedException>(base.CanChangeDefaultValueForColumn);
+            Assert.Throws<NotSupportedException>((Action)base.CanChangeDefaultValueForColumn);
         }
 
-        [Test]
+        [Fact]
         public override void CanChangeNotNullProperty()
         {
-            Assert.Throws<NotSupportedException>(base.CanChangeNotNullProperty);
+            Assert.Throws<NotSupportedException>((Action)base.CanChangeNotNullProperty);
         }
 
-        [Test]
+        [Fact]
         public override void CanRemoveColumn()
         {
-            Assert.Throws<NotSupportedException>(base.CanRemoveColumn);
+            Assert.Throws<NotSupportedException>((Action)base.CanRemoveColumn);
         }
 
-        [Test]
+        [Fact]
         public override void CanRenameColumn()
         {
-            Assert.Throws<NotSupportedException>(base.CanRenameColumn);
+            Assert.Throws<NotSupportedException>((Action)base.CanRenameColumn);
         }
 
-        [Test]
+        [Fact]
         public override void CanSetNotNullRepeatedly()
         {
-            Assert.Throws<NotSupportedException>(base.CanSetNotNullRepeatedly);
+            Assert.Throws<NotSupportedException>((Action)base.CanSetNotNullRepeatedly);
         }
 
-        [Test]
+        [Fact]
         public override void CantRemoveUnexistingColumn()
         {
             string tableName = GetRandomName("RemoveUnexistingColumn");

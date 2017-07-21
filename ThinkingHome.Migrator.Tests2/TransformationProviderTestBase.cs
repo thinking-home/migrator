@@ -4,7 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
+using Xunit;
 using ThinkingHome.Migrator.Exceptions;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
@@ -13,7 +13,7 @@ using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstrain
 
 namespace ThinkingHome.Migrator.Tests
 {
-    public abstract class TransformationProviderTestBase
+    public abstract class TransformationProviderTestBase: IDisposable
     {
         public class NameComparer : IEqualityComparer<string>
         {
@@ -60,8 +60,7 @@ namespace ThinkingHome.Migrator.Tests
 
         public abstract ITransformationProvider CreateProvider(ILogger logger = null);
 
-        [SetUp]
-        public virtual void SetUp()
+        protected TransformationProviderTestBase()
         {
             if (!isInitialized)
             {
@@ -71,8 +70,7 @@ namespace ThinkingHome.Migrator.Tests
             provider = CreateProvider();
         }
 
-        [TearDown]
-        public virtual void TearDown()
+        public void Dispose()
         {
             provider.Dispose();
         }
@@ -87,7 +85,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region common
 
-        [Test]
+        [Fact]
         public void CanExecuteBatches()
         {
             provider.AddTable("BatchSqlTest",
@@ -102,16 +100,16 @@ namespace ThinkingHome.Migrator.Tests
             {
                 for (int i = 1; i <= 3; i++)
                 {
-                    Assert.IsTrue(reader.Read());
-                    Assert.AreEqual(111 * i, Convert.ToInt32(reader[0]));
+                    Assert.True(reader.Read());
+                    Assert.Equal(111 * i, Convert.ToInt32(reader[0]));
                 }
-                Assert.IsFalse(reader.Read());
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable("BatchSqlTest");
         }
 
-        [Test]
+        [Fact]
         public void CanExecuteScriptFromResources()
         {
             provider.AddTable("TestTwo",
@@ -124,51 +122,51 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME} WHERE {2:NAME} = {3}",
                 "TestId", "TestTwo", "Id", 5555);
 
-            Assert.AreEqual(9999, provider.ExecuteScalar(sql));
+            Assert.Equal(9999, provider.ExecuteScalar(sql));
 
             provider.RemoveTable("TestTwo");
         }
 
-        [Test]
+        [Fact]
         public virtual void CanUseTransactions()
         {
             provider.BeginTransaction();
             provider.AddTable("transtest", new Column("id", DbType.Int32));
             provider.Commit();
-            Assert.IsTrue(provider.TableExists("transtest"));
+            Assert.True(provider.TableExists("transtest"));
             provider.RemoveTable("transtest");
         }
 
-        [Test]
+        [Fact]
         public virtual void CanRollbackTransactions()
         {
             provider.BeginTransaction();
             provider.AddTable("transtest", new Column("id", DbType.Int32));
             provider.Rollback();
-            Assert.IsFalse(provider.TableExists("transtest"));
+            Assert.False(provider.TableExists("transtest"));
         }
 
         #endregion
 
         #region table
 
-        [Test]
+        [Fact]
         public virtual void CanAddAndDropTable()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("MooTable");
 
-            Assert.IsFalse(provider.TableExists(tableName));
+            Assert.False(provider.TableExists(tableName));
 
             provider.AddTable(tableName, new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey));
 
-            Assert.IsTrue(provider.TableExists(tableName));
+            Assert.True(provider.TableExists(tableName));
 
             provider.RemoveTable(tableName);
 
-            Assert.IsFalse(provider.TableExists(tableName));
+            Assert.False(provider.TableExists(tableName));
         }
 
-        [Test]
+        [Fact]
         public virtual void CanCreateTableWithNecessaryCols()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("Mimimi");
@@ -189,17 +187,17 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("select * from {0:NAME}", tableName);
             using (var reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(1984, reader["ID"]);
-                Assert.AreEqual("test moo", reader["StringColumn"]);
-                Assert.AreEqual(123, Convert.ToDecimal(reader["IntegerColumn"]));
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(1984, reader["ID"]);
+                Assert.Equal("test moo", reader["StringColumn"]);
+                Assert.Equal(123, Convert.ToDecimal(reader["IntegerColumn"]));
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddTableWithCompoundPrimaryKey()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("TableWCPK");
@@ -219,7 +217,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void TableWithCompoundPrimaryKeyShouldKeepNullForOtherProperties()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("Test");
@@ -237,39 +235,39 @@ namespace ThinkingHome.Migrator.Tests
 
             using (var reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(DBNull.Value, reader[0]);
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(DBNull.Value, reader[0]);
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanRenameTable()
         {
             SchemaQualifiedObjectName table1 = GetRandomTableName("tableMoo");
             SchemaQualifiedObjectName table2 = GetRandomTableName("tableHru");
 
-            Assert.IsFalse(provider.TableExists(table1));
-            Assert.IsFalse(provider.TableExists(table2));
+            Assert.False(provider.TableExists(table1));
+            Assert.False(provider.TableExists(table2));
 
             provider.AddTable(table1, new Column("ID", DbType.Int32));
             provider.RenameTable(table1, table2.Name);
 
-            Assert.IsTrue(provider.TableExists(table2));
+            Assert.True(provider.TableExists(table2));
 
             provider.RemoveTable(table2);
         }
 
-        [Test]
+        [Fact]
         public virtual void CantRemoveUnexistingTable()
         {
             var randomTableName = GetRandomTableName();
             Assert.Throws<SQLException>(() => provider.RemoveTable(randomTableName));
         }
 
-        [Test]
+        [Fact]
         public virtual void CanGetTables()
         {
             string schema = GetSchemaForCreateTables();
@@ -280,19 +278,19 @@ namespace ThinkingHome.Migrator.Tests
 
             var tables = provider.GetTables(schema);
 
-            Assert.That(tables.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
-            Assert.IsFalse(tables.Select(t => t.Name).Contains(table1.Name, StrComparer));
-            Assert.IsFalse(tables.Select(t => t.Name).Contains(table2.Name, StrComparer));
+            Assert.True(tables.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
+            Assert.False(tables.Select(t => t.Name).Contains(table1.Name, StrComparer));
+            Assert.False(tables.Select(t => t.Name).Contains(table2.Name, StrComparer));
 
             provider.AddTable(table1, new Column("ID", DbType.Int32));
             provider.AddTable(table2, new Column("ID", DbType.Int32));
 
             var tables2 = provider.GetTables(schema);
 
-            Assert.AreEqual(tables.Length + 2, tables2.Length);
-            Assert.That(tables2.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
-            Assert.IsTrue(tables2.Select(t => t.Name).Contains(table1.Name, StrComparer));
-            Assert.IsTrue(tables2.Select(t => t.Name).Contains(table2.Name, StrComparer));
+            Assert.Equal(tables.Length + 2, tables2.Length);
+            Assert.True(tables2.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
+            Assert.True(tables2.Select(t => t.Name).Contains(table1.Name, StrComparer));
+            Assert.True(tables2.Select(t => t.Name).Contains(table2.Name, StrComparer));
 
             provider.RemoveTable(table1);
             provider.RemoveTable(table2);
@@ -302,7 +300,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region columns
 
-        [Test]
+        [Fact]
         public virtual void CanAddColumn()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddColumnTest");
@@ -317,21 +315,21 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("select * from {0:NAME}", tableName);
             using (var reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(2, reader[0]);
-                Assert.AreEqual("test", reader[1]);
+                Assert.True(reader.Read());
+                Assert.Equal(2, reader[0]);
+                Assert.Equal("test", reader[1]);
 
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(4, reader[0]);
-                Assert.AreEqual("testmoo", reader[1]);
+                Assert.True(reader.Read());
+                Assert.Equal(4, reader[0]);
+                Assert.Equal("testmoo", reader[1]);
 
-                Assert.IsFalse(reader.Read());
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddBooleanColumnWithDefault()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddBooleanColumnTest");
@@ -346,19 +344,19 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("select * from {0:NAME}", tableName);
             using (var reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
+                Assert.True(reader.Read());
 
-                Assert.AreEqual(22, reader["ID"]);
-                Assert.AreEqual(true, Convert.ToBoolean(reader["Boolean1"]));
-                Assert.AreEqual(false, Convert.ToBoolean(reader["Boolean2"]));
+                Assert.Equal(22, reader["ID"]);
+                Assert.Equal(true, Convert.ToBoolean(reader["Boolean1"]));
+                Assert.Equal(false, Convert.ToBoolean(reader["Boolean2"]));
 
-                Assert.IsFalse(reader.Read());
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanSetNotNullRepeatedly()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("TestTable");
@@ -376,7 +374,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanChangeColumnType()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("ChangeColumnTypeTest");
@@ -390,7 +388,7 @@ namespace ThinkingHome.Migrator.Tests
                 new Column(columnName2, DbType.Decimal.WithSize(8, 4)));
 
             provider.Insert(tableName, new[] { "ID", columnName1, columnName2 }, new[] { "1", "123.4568", "123.4568" });
-            Assert.AreEqual(123.4568, provider.ExecuteScalar(selectSql));
+            Assert.Equal(123.4568, provider.ExecuteScalar(selectSql));
 
             // делаем по извращенски с 2 колонками, т.к. у оракла ограничение: изменяемая колонка должна быть пустой
             provider.Update(tableName, new[] { columnName2 }, new string[] { null });
@@ -398,12 +396,12 @@ namespace ThinkingHome.Migrator.Tests
             string updateSql = provider.FormatSql("update {0:NAME} set {1:NAME} = {2:NAME}", tableName, columnName2, columnName1);
             provider.ExecuteNonQuery(updateSql);
 
-            Assert.AreEqual(123, provider.ExecuteScalar(selectSql));
+            Assert.Equal(123, provider.ExecuteScalar(selectSql));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanChangeNotNullProperty()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("ChangeNotNullPropertyTest");
@@ -431,7 +429,7 @@ namespace ThinkingHome.Migrator.Tests
 
 
 
-        [Test]
+        [Fact]
         public virtual void CanChangeDefaultValueForColumn()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("ChangeDefault");
@@ -464,21 +462,21 @@ namespace ThinkingHome.Migrator.Tests
 
             using (var reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(2, reader[0]);
-                Assert.AreEqual("moo-default", reader[1]);
+                Assert.True(reader.Read());
+                Assert.Equal(2, reader[0]);
+                Assert.Equal("moo-default", reader[1]);
 
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(3, reader[0]);
-                Assert.AreEqual("mi-default", reader[1]);
+                Assert.True(reader.Read());
+                Assert.Equal(3, reader[0]);
+                Assert.Equal("mi-default", reader[1]);
 
-                Assert.IsFalse(reader.Read());
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanRenameColumn()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("RenameColumnTest");
@@ -486,13 +484,13 @@ namespace ThinkingHome.Migrator.Tests
             provider.AddTable(tableName, new Column("TestColumn1", DbType.Int32));
             provider.RenameColumn(tableName, "TestColumn1", "TestColumn2");
 
-            Assert.IsFalse(provider.ColumnExists(tableName, "TestColumn1"));
-            Assert.IsTrue(provider.ColumnExists(tableName, "TestColumn2"));
+            Assert.False(provider.ColumnExists(tableName, "TestColumn1"));
+            Assert.True(provider.ColumnExists(tableName, "TestColumn2"));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanRemoveColumn()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("RemoveColumnTest");
@@ -503,25 +501,25 @@ namespace ThinkingHome.Migrator.Tests
 
             provider.RemoveColumn(tableName, "TestColumn1");
 
-            Assert.IsFalse(provider.ColumnExists(tableName, "TestColumn1"));
+            Assert.False(provider.ColumnExists(tableName, "TestColumn1"));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public void CanCheckThatColumnExists()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("RemoveColumnTest");
 
             provider.AddTable(tableName, new Column("MooMooMi", DbType.Int32));
 
-            Assert.IsFalse(provider.ColumnExists(tableName, "asdfgfhgj"));
-            Assert.IsTrue(provider.ColumnExists(tableName, "MooMooMi"));
+            Assert.False(provider.ColumnExists(tableName, "asdfgfhgj"));
+            Assert.True(provider.ColumnExists(tableName, "MooMooMi"));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CantRemoveUnexistingColumn()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("RemoveUnexistingColumn");
@@ -541,7 +539,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region primary key
 
-        [Test]
+        [Fact]
         public virtual void CanAddPrimaryKey()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddPrimaryKey");
@@ -562,20 +560,20 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanCheckThatPrimaryKeyIsExist()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("CheckThatPrimaryKeyIsExist");
             string pkName = GetRandomName("PK_CheckThatPrimaryKeyIsExist");
 
             provider.AddTable(tableName, new Column("ID", DbType.Int32, ColumnProperty.NotNull));
-            Assert.IsFalse(provider.ConstraintExists(tableName, pkName));
+            Assert.False(provider.ConstraintExists(tableName, pkName));
 
             provider.AddPrimaryKey(pkName, tableName, "ID");
-            Assert.IsTrue(provider.ConstraintExists(tableName, pkName));
+            Assert.True(provider.ConstraintExists(tableName, pkName));
 
             provider.RemoveConstraint(tableName, pkName);
-            Assert.IsFalse(provider.ConstraintExists(tableName, pkName));
+            Assert.False(provider.ConstraintExists(tableName, pkName));
 
             provider.RemoveTable(tableName);
         }
@@ -584,7 +582,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region foreign key
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKey()
         {
             // создаем таблицы и добавляем внешний ключ
@@ -611,7 +609,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddComplexForeignKey()
         {
             // создаем таблицы и добавляем внешний ключ
@@ -653,7 +651,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithDeleteCascade()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -672,14 +670,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.Delete(refTable);
 
             string sql = provider.FormatSql("select count(*) from {0:NAME}", primaryTable);
-            Assert.AreEqual(0, provider.ExecuteScalar(sql));
+            Assert.Equal(0, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithUpdateCascade()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -702,14 +700,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.Update(refTable, new[] { "ID" }, new[] { "777" });
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.AreEqual(777, provider.ExecuteScalar(sql));
+            Assert.Equal(777, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithDeleteSetNull()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -728,14 +726,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.Delete(refTable);
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.AreEqual(DBNull.Value, provider.ExecuteScalar(sql));
+            Assert.Equal(DBNull.Value, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithUpdateSetNull()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -758,14 +756,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.Update(refTable, new[] { "ID" }, new[] { "777" });
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.AreEqual(DBNull.Value, provider.ExecuteScalar(sql));
+            Assert.Equal(DBNull.Value, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithDeleteSetDefault()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -787,14 +785,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.Delete(refTable, whereSql);
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.AreEqual(998, provider.ExecuteScalar(sql));
+            Assert.Equal(998, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
             provider.RemoveTable(refTable);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddForeignKeyWithUpdateSetDefault()
         {
             SchemaQualifiedObjectName primaryTable = GetRandomTableName("AddForeignKey_Primary");
@@ -819,7 +817,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Update(refTable, new[] { "ID" }, new[] { "777" }, whereSql);
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.AreEqual(999, provider.ExecuteScalar(sql));
+            Assert.Equal(999, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
@@ -830,7 +828,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region unique constraint
 
-        [Test]
+        [Fact]
         public virtual void CanAddComplexUniqueConstraint()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddComplexUniqueConstraint");
@@ -840,7 +838,7 @@ namespace ThinkingHome.Migrator.Tests
                 new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey),
                 new Column("TestStringColumn1", DbType.String.WithSize(20)),
                 new Column("TestStringColumn2", DbType.String.WithSize(20)));
-            Assert.IsFalse(provider.ConstraintExists(tableName, ucName));
+            Assert.False(provider.ConstraintExists(tableName, ucName));
 
             provider.AddUniqueConstraint(ucName, tableName, "TestStringColumn1", "TestStringColumn2");
 
@@ -865,7 +863,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanCheckThatUniqueConstraintIsExist()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddUniqueConstraint");
@@ -874,14 +872,14 @@ namespace ThinkingHome.Migrator.Tests
             provider.AddTable(tableName,
                 new Column("ID1", DbType.Int32, ColumnProperty.PrimaryKey),
                 new Column("TestStringColumn", DbType.String.WithSize(20)));
-            Assert.IsFalse(provider.ConstraintExists(tableName, ucName));
+            Assert.False(provider.ConstraintExists(tableName, ucName));
 
             // добавляем UC и проверяем его существование
             provider.AddUniqueConstraint(ucName, tableName, "TestStringColumn");
-            Assert.IsTrue(provider.ConstraintExists(tableName, ucName));
+            Assert.True(provider.ConstraintExists(tableName, ucName));
 
             provider.RemoveConstraint(tableName, ucName);
-            Assert.IsFalse(provider.ConstraintExists(tableName, ucName));
+            Assert.False(provider.ConstraintExists(tableName, ucName));
 
             provider.RemoveTable(tableName);
         }
@@ -890,7 +888,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region check constraint
 
-        [Test]
+        [Fact]
         public virtual void CanAddCheckConstraint()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddCheckConstraint");
@@ -908,21 +906,21 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanVerifyThatCheckConstraintIsExist()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("CheckConstraintIsExist");
             string constraintName = GetRandomName("CC_CheckConstraintIsExist");
 
             provider.AddTable(tableName, new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey));
-            Assert.IsFalse(provider.ConstraintExists(tableName, constraintName));
+            Assert.False(provider.ConstraintExists(tableName, constraintName));
 
             string checkSql = provider.FormatSql("{0:NAME} > 5", "ID");
             provider.AddCheckConstraint(constraintName, tableName, checkSql);
-            Assert.IsTrue(provider.ConstraintExists(tableName, constraintName));
+            Assert.True(provider.ConstraintExists(tableName, constraintName));
 
             provider.RemoveConstraint(tableName, constraintName);
-            Assert.IsFalse(provider.ConstraintExists(tableName, constraintName));
+            Assert.False(provider.ConstraintExists(tableName, constraintName));
 
             provider.RemoveTable(tableName);
         }
@@ -933,7 +931,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region index
 
-        [Test]
+        [Fact]
         public virtual void CanAddAndRemoveIndex()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddIndex");
@@ -944,18 +942,18 @@ namespace ThinkingHome.Migrator.Tests
                 new Column("Name", DbType.String.WithSize(10)));
 
             provider.AddIndex(indexName, false, tableName, new[] { "Name" });
-            Assert.IsTrue(provider.IndexExists(indexName, tableName));
+            Assert.True(provider.IndexExists(indexName, tableName));
 
             provider.Insert(tableName, new[] { "ID", "Name" }, new[] { "1", "test-name" });
             provider.Insert(tableName, new[] { "ID", "Name" }, new[] { "2", "test-name" });
 
             provider.RemoveIndex(indexName, tableName);
-            Assert.IsFalse(provider.IndexExists(indexName, tableName));
+            Assert.False(provider.IndexExists(indexName, tableName));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddAndRemoveUniqueIndex()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddUniqueIndex");
@@ -965,19 +963,19 @@ namespace ThinkingHome.Migrator.Tests
                 new Column("Name", DbType.String.WithSize(10)));
 
             provider.AddIndex("ix_moo", true, tableName, new[] { "Name" });
-            Assert.IsTrue(provider.IndexExists("ix_moo", tableName));
+            Assert.True(provider.IndexExists("ix_moo", tableName));
 
             provider.Insert(tableName, new[] { "ID", "Name" }, new[] { "1", "test-name" });
             Assert.Throws<SQLException>(() =>
                     provider.Insert(tableName, new[] { "ID", "Name" }, new[] { "2", "test-name" }));
 
             provider.RemoveIndex("ix_moo", tableName);
-            Assert.IsFalse(provider.IndexExists("ix_moo", tableName));
+            Assert.False(provider.IndexExists("ix_moo", tableName));
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanAddAndRemoveComplexIndex()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("AddComplexIndex");
@@ -988,7 +986,7 @@ namespace ThinkingHome.Migrator.Tests
                 new Column("Name2", DbType.String.WithSize(20)));
 
             provider.AddIndex("ix_moo", true, tableName, new[] { "Name1", "Name2" });
-            Assert.IsTrue(provider.IndexExists("ix_moo", tableName));
+            Assert.True(provider.IndexExists("ix_moo", tableName));
 
             provider.Insert(tableName, new[] { "ID", "Name1", "Name2" }, new[] { "1", "test-name", "xxx" });
             provider.Insert(tableName, new[] { "ID", "Name1", "Name2" }, new[] { "2", "test-name-2", "xxx" });
@@ -998,7 +996,7 @@ namespace ThinkingHome.Migrator.Tests
 
 
             provider.RemoveIndex("ix_moo", tableName);
-            Assert.IsFalse(provider.IndexExists("ix_moo", tableName));
+            Assert.False(provider.IndexExists("ix_moo", tableName));
 
             provider.RemoveTable(tableName);
         }
@@ -1009,7 +1007,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region insert
 
-        [Test]
+        [Fact]
         public virtual void CanInsertData()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("InsertTest");
@@ -1024,17 +1022,17 @@ namespace ThinkingHome.Migrator.Tests
                 "Id", "Title", "Title2", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(126, reader[0]);
-                Assert.AreEqual(DBNull.Value, reader[1]);
-                Assert.AreEqual("Muad'Dib", reader.GetString(2));
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(126, reader[0]);
+                Assert.Equal(DBNull.Value, reader[1]);
+                Assert.Equal("Muad'Dib", reader.GetString(2));
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanInsertDataFromObject()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("InsertTest");
@@ -1057,11 +1055,11 @@ namespace ThinkingHome.Migrator.Tests
 
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(129, reader[0]);
-                Assert.AreEqual(DBNull.Value, reader[1]);
-                Assert.AreEqual("lewqkghwl", reader.GetString(2));
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(129, reader[0]);
+                Assert.Equal(DBNull.Value, reader[1]);
+                Assert.Equal("lewqkghwl", reader.GetString(2));
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
@@ -1071,7 +1069,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region update
 
-        [Test]
+        [Fact]
         public virtual void CanUpdateData()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("UpdateData");
@@ -1088,17 +1086,17 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME}", "TestInteger", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(42, reader["TestInteger"]);
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(42, reader["TestInteger"]);
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(42, reader["TestInteger"]);
+                Assert.True(reader.Read());
+                Assert.Equal(42, reader["TestInteger"]);
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanUpdateDataFromObject()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("UpdateData");
@@ -1115,17 +1113,17 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME}", "TestInteger", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(249, reader["TestInteger"]);
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(249, reader["TestInteger"]);
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(249, reader["TestInteger"]);
+                Assert.True(reader.Read());
+                Assert.Equal(249, reader["TestInteger"]);
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanUpdateWithNullData()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("UpdateWithNullData");
@@ -1142,17 +1140,17 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME}", "TestInteger", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(DBNull.Value, reader[0]);
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(DBNull.Value, reader[0]);
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(DBNull.Value, reader[0]);
+                Assert.True(reader.Read());
+                Assert.Equal(DBNull.Value, reader[0]);
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanUpdateDataWithWhere()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("UpdateDataWithWhere");
@@ -1172,13 +1170,13 @@ namespace ThinkingHome.Migrator.Tests
 
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(1, reader[0]);
-                Assert.AreEqual(123, reader[1]);
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(2, reader[0]);
-                Assert.AreEqual(777, reader[1]);
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(1, reader[0]);
+                Assert.Equal(123, reader[1]);
+                Assert.True(reader.Read());
+                Assert.Equal(2, reader[0]);
+                Assert.Equal(777, reader[1]);
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
@@ -1188,7 +1186,7 @@ namespace ThinkingHome.Migrator.Tests
 
         #region delete
 
-        [Test]
+        [Fact]
         public virtual void CanDeleteData()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("DeleteData");
@@ -1203,15 +1201,15 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME}", "Id", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsTrue(reader.Read());
-                Assert.AreEqual(1023, Convert.ToInt32(reader[0]));
-                Assert.IsFalse(reader.Read());
+                Assert.True(reader.Read());
+                Assert.Equal(1023, Convert.ToInt32(reader[0]));
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanDeleteAllData()
         {
             SchemaQualifiedObjectName tableName = GetRandomTableName("DeleteAllData");
@@ -1225,7 +1223,7 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME}", "Id", tableName);
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
-                Assert.IsFalse(reader.Read());
+                Assert.False(reader.Read());
             }
 
             provider.RemoveTable(tableName);
@@ -1237,50 +1235,50 @@ namespace ThinkingHome.Migrator.Tests
 
         #region for migrator core
 
-        [Test]
+        [Fact]
         public virtual void SchemaInfoTableShouldBeCreatedWhenGetAppliedMigrations()
         {
             const string KEY = "mi mi mi";
             const string SCHEMA_INFO_TABLE_NAME = "SchemaInfo";
 
-            Assert.IsFalse(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.False(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             var appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.AreEqual(0, appliedMigrations.Count);
-            Assert.IsTrue(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.Equal(0, appliedMigrations.Count);
+            Assert.True(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
         }
 
-        [Test]
+        [Fact]
         public virtual void SchemaInfoTableShouldBeCreatedWhenMigrationApplied()
         {
             const string KEY = "mi mi mi";
             const string SCHEMA_INFO_TABLE_NAME = "SchemaInfo";
 
-            Assert.IsFalse(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.False(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.MigrationApplied(1, KEY);
-            Assert.IsTrue(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.True(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
         }
 
-        [Test]
+        [Fact]
         public virtual void SchemaInfoTableShouldBeCreatedWhenMigrationUnApplied()
         {
             const string KEY = "mi mi mi";
             const string SCHEMA_INFO_TABLE_NAME = "SchemaInfo";
 
-            Assert.IsFalse(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.False(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.MigrationUnApplied(1, KEY);
-            Assert.IsTrue(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.True(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
         }
 
-        [Test]
+        [Fact]
         public virtual void CanGetAppliedMigrations()
         {
             // todo: разбить этот тест на несколько
@@ -1288,23 +1286,23 @@ namespace ThinkingHome.Migrator.Tests
             const string KEY = "mi mi mi";
             const string SCHEMA_INFO_TABLE_NAME = "SchemaInfo";
 
-            Assert.IsFalse(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
+            Assert.False(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             // Check that a "set" called after the first run works.
             provider.MigrationApplied(123, KEY);
             provider.MigrationApplied(125, KEY);
             var appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.AreEqual(2, appliedMigrations.Count);
-            Assert.AreEqual(123, appliedMigrations[0]);
-            Assert.AreEqual(125, appliedMigrations[1]);
+            Assert.Equal(2, appliedMigrations.Count);
+            Assert.Equal(123, appliedMigrations[0]);
+            Assert.Equal(125, appliedMigrations[1]);
 
             provider.MigrationUnApplied(123, KEY);
             appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.AreEqual(1, appliedMigrations.Count);
-            Assert.AreEqual(125, appliedMigrations[0]);
+            Assert.Equal(1, appliedMigrations.Count);
+            Assert.Equal(125, appliedMigrations[0]);
 
             var appliedMigrationsForAnotherKey = provider.GetAppliedMigrations("d3d4136830a94fdca8bd19f1c2eb9e81");
-            Assert.AreEqual(0, appliedMigrationsForAnotherKey.Count);
+            Assert.Equal(0, appliedMigrationsForAnotherKey.Count);
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
         }
