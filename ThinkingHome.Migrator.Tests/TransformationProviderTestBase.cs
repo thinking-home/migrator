@@ -13,6 +13,19 @@ using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstrain
 
 namespace ThinkingHome.Migrator.Tests
 {
+    public static class Assert2 {
+    
+        // number comparison without type equality
+    
+        public static void Equal(int x, object y) {
+            Assert.Equal(Convert.ToInt64(x), Convert.ToInt64(y));
+        }
+
+        public static void Equal(decimal x, object y) {
+            Assert.Equal(Convert.ToDecimal(x), Convert.ToDecimal(y));
+        }
+    }
+
     public abstract class TransformationProviderTestBase: IDisposable
     {
         public class NameComparer : IEqualityComparer<string>
@@ -122,7 +135,7 @@ namespace ThinkingHome.Migrator.Tests
             string sql = provider.FormatSql("SELECT {0:NAME} FROM {1:NAME} WHERE {2:NAME} = {3}",
                 "TestId", "TestTwo", "Id", 5555);
 
-            Assert.Equal(9999, provider.ExecuteScalar(sql));
+            Assert2.Equal(9999, provider.ExecuteScalar(sql));
 
             provider.RemoveTable("TestTwo");
         }
@@ -188,9 +201,9 @@ namespace ThinkingHome.Migrator.Tests
             using (var reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(1984, reader["ID"]);
+                Assert2.Equal(1984, reader["ID"]);
                 Assert.Equal("test moo", reader["StringColumn"]);
-                Assert.Equal(123, Convert.ToDecimal(reader["IntegerColumn"]));
+                Assert2.Equal(123, Convert.ToDecimal(reader["IntegerColumn"]));
                 Assert.False(reader.Read());
             }
 
@@ -316,11 +329,11 @@ namespace ThinkingHome.Migrator.Tests
             using (var reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(2, reader[0]);
+                Assert2.Equal(2, reader[0]);
                 Assert.Equal("test", reader[1]);
 
                 Assert.True(reader.Read());
-                Assert.Equal(4, reader[0]);
+                Assert2.Equal(4, reader[0]);
                 Assert.Equal("testmoo", reader[1]);
 
                 Assert.False(reader.Read());
@@ -346,7 +359,7 @@ namespace ThinkingHome.Migrator.Tests
             {
                 Assert.True(reader.Read());
 
-                Assert.Equal(22, reader["ID"]);
+                Assert2.Equal(22, reader["ID"]);
                 Assert.Equal(true, Convert.ToBoolean(reader["Boolean1"]));
                 Assert.Equal(false, Convert.ToBoolean(reader["Boolean2"]));
 
@@ -388,7 +401,7 @@ namespace ThinkingHome.Migrator.Tests
                 new Column(columnName2, DbType.Decimal.WithSize(8, 4)));
 
             provider.Insert(tableName, new[] { "ID", columnName1, columnName2 }, new[] { "1", "123.4568", "123.4568" });
-            Assert.Equal(123.4568, provider.ExecuteScalar(selectSql));
+            Assert2.Equal(123.4568m, provider.ExecuteScalar(selectSql));
 
             // делаем по извращенски с 2 колонками, т.к. у оракла ограничение: изменяемая колонка должна быть пустой
             provider.Update(tableName, new[] { columnName2 }, new string[] { null });
@@ -396,7 +409,7 @@ namespace ThinkingHome.Migrator.Tests
             string updateSql = provider.FormatSql("update {0:NAME} set {1:NAME} = {2:NAME}", tableName, columnName2, columnName1);
             provider.ExecuteNonQuery(updateSql);
 
-            Assert.Equal(123, provider.ExecuteScalar(selectSql));
+            Assert2.Equal(123, provider.ExecuteScalar(selectSql));
 
             provider.RemoveTable(tableName);
         }
@@ -463,11 +476,11 @@ namespace ThinkingHome.Migrator.Tests
             using (var reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(2, reader[0]);
+                Assert2.Equal(2, reader[0]);
                 Assert.Equal("moo-default", reader[1]);
 
                 Assert.True(reader.Read());
-                Assert.Equal(3, reader[0]);
+                Assert2.Equal(3, reader[0]);
                 Assert.Equal("mi-default", reader[1]);
 
                 Assert.False(reader.Read());
@@ -670,7 +683,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Delete(refTable);
 
             string sql = provider.FormatSql("select count(*) from {0:NAME}", primaryTable);
-            Assert.Equal(0, provider.ExecuteScalar(sql));
+            Assert2.Equal(0, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
@@ -700,7 +713,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Update(refTable, new[] { "ID" }, new[] { "777" });
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.Equal(777, provider.ExecuteScalar(sql));
+            Assert2.Equal(777, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
@@ -785,7 +798,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Delete(refTable, whereSql);
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.Equal(998, provider.ExecuteScalar(sql));
+            Assert2.Equal(998, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
@@ -817,7 +830,7 @@ namespace ThinkingHome.Migrator.Tests
             provider.Update(refTable, new[] { "ID" }, new[] { "777" }, whereSql);
 
             string sql = provider.FormatSql("select {0:NAME} from {1:NAME}", "RefID", primaryTable);
-            Assert.Equal(999, provider.ExecuteScalar(sql));
+            Assert2.Equal(999, provider.ExecuteScalar(sql));
 
             // удаляем таблицы
             provider.RemoveTable(primaryTable);
@@ -1023,7 +1036,7 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(126, reader[0]);
+                Assert2.Equal(126, reader[0]);
                 Assert.Equal(DBNull.Value, reader[1]);
                 Assert.Equal("Muad'Dib", reader.GetString(2));
                 Assert.False(reader.Read());
@@ -1056,7 +1069,7 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(129, reader[0]);
+                Assert2.Equal(129, reader[0]);
                 Assert.Equal(DBNull.Value, reader[1]);
                 Assert.Equal("lewqkghwl", reader.GetString(2));
                 Assert.False(reader.Read());
@@ -1087,9 +1100,9 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(42, reader["TestInteger"]);
+                Assert2.Equal(42, reader["TestInteger"]);
                 Assert.True(reader.Read());
-                Assert.Equal(42, reader["TestInteger"]);
+                Assert2.Equal(42, reader["TestInteger"]);
                 Assert.False(reader.Read());
             }
 
@@ -1114,9 +1127,9 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(249, reader["TestInteger"]);
+                Assert2.Equal(249, reader["TestInteger"]);
                 Assert.True(reader.Read());
-                Assert.Equal(249, reader["TestInteger"]);
+                Assert2.Equal(249, reader["TestInteger"]);
                 Assert.False(reader.Read());
             }
 
@@ -1171,11 +1184,11 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(1, reader[0]);
-                Assert.Equal(123, reader[1]);
+                Assert2.Equal(1, reader[0]);
+                Assert2.Equal(123, reader[1]);
                 Assert.True(reader.Read());
-                Assert.Equal(2, reader[0]);
-                Assert.Equal(777, reader[1]);
+                Assert2.Equal(2, reader[0]);
+                Assert2.Equal(777, reader[1]);
                 Assert.False(reader.Read());
             }
 
@@ -1202,7 +1215,7 @@ namespace ThinkingHome.Migrator.Tests
             using (IDataReader reader = provider.ExecuteReader(sql))
             {
                 Assert.True(reader.Read());
-                Assert.Equal(1023, Convert.ToInt32(reader[0]));
+                Assert2.Equal(1023, reader[0]);
                 Assert.False(reader.Read());
             }
 
@@ -1244,7 +1257,7 @@ namespace ThinkingHome.Migrator.Tests
             Assert.False(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             var appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.Equal(0, appliedMigrations.Count);
+            Assert2.Equal(0, appliedMigrations.Count);
             Assert.True(provider.TableExists(SCHEMA_INFO_TABLE_NAME));
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
@@ -1292,17 +1305,17 @@ namespace ThinkingHome.Migrator.Tests
             provider.MigrationApplied(123, KEY);
             provider.MigrationApplied(125, KEY);
             var appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.Equal(2, appliedMigrations.Count);
-            Assert.Equal(123, appliedMigrations[0]);
-            Assert.Equal(125, appliedMigrations[1]);
+            Assert2.Equal(2, appliedMigrations.Count);
+            Assert2.Equal(123, appliedMigrations[0]);
+            Assert2.Equal(125, appliedMigrations[1]);
 
             provider.MigrationUnApplied(123, KEY);
             appliedMigrations = provider.GetAppliedMigrations(KEY);
-            Assert.Equal(1, appliedMigrations.Count);
-            Assert.Equal(125, appliedMigrations[0]);
+            Assert2.Equal(1, appliedMigrations.Count);
+            Assert2.Equal(125, appliedMigrations[0]);
 
             var appliedMigrationsForAnotherKey = provider.GetAppliedMigrations("d3d4136830a94fdca8bd19f1c2eb9e81");
-            Assert.Equal(0, appliedMigrationsForAnotherKey.Count);
+            Assert2.Equal(0, appliedMigrationsForAnotherKey.Count);
 
             provider.RemoveTable(SCHEMA_INFO_TABLE_NAME);
         }
