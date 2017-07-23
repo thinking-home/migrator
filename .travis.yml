@@ -10,4 +10,5 @@ before_script:
   - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres  
   - psql -c 'CREATE SCHEMA "Moo" AUTHORIZATION migrator;' -U postgres -d migrations  
 script:  
-  - sh ./build.sh
+  - dotnet restore
+  - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.0
