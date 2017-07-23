@@ -10,7 +10,7 @@ namespace ThinkingHome.Migrator.Tests.Providers
         public override ITransformationProvider CreateProvider(ILogger logger = null)
         {
             return new PostgreSQLProviderFactory()
-                .CreateProvider("host=localhost;port=5432;database=migrations;user name=postgres;password=123", logger);
+                .CreateProvider("host=localhost;port=5432;database=migrations;user name=migrator;password=123", logger);
         }
 
         protected override string BatchSql
