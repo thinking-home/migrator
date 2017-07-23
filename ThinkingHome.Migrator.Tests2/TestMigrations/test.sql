@@ -1,1 +1,0 @@
-﻿insert into TestTwo (Id, TestId) values (5555, 9999)

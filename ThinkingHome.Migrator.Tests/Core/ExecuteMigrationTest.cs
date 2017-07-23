@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 using ThinkingHome.Migrator.Framework.Interfaces;
 
 namespace ThinkingHome.Migrator.Tests.Core
@@ -9,7 +9,6 @@ namespace ThinkingHome.Migrator.Tests.Core
     /// <summary>
     /// Проверка выполнения миграций
     /// </summary>
-    [TestFixture]
     public class ExecuteMigrationTest
     {
         #region with transaction
@@ -17,7 +16,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка выполнения миграции "вверх"
         /// </summary>
-        [Test]
+        [Fact]
         public void CanMoveUp()
         {
             var provider = new Mock<ITransformationProvider>();
@@ -37,7 +36,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка выполнения миграции "вниз"
         /// </summary>
-        [Test]
+        [Fact]
         public void CanMoveDown()
         {
             var provider = new Mock<ITransformationProvider>();
@@ -57,7 +56,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка, что при возникновении ошибки выполняется откат транзакции
         /// </summary>
-        [Test]
+        [Fact]
         public void ShouldPerformRollbackWhenException()
         {
             var provider = new Mock<ITransformationProvider>();
@@ -84,7 +83,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка выполнения миграции "вверх" (без транзакции)
         /// </summary>
-        [Test]
+        [Fact]
         public void CanMoveUpWithoutTransaction()
         {
             var provider = new Mock<ITransformationProvider>();
@@ -102,7 +101,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка выполнения миграции "вниз" (без транзакции)
         /// </summary>
-        [Test]
+        [Fact]
         public void CanMoveDownWithoutTransaction()
         {
             var provider = new Mock<ITransformationProvider>();
@@ -120,7 +119,7 @@ namespace ThinkingHome.Migrator.Tests.Core
         /// <summary>
         /// Проверка, что при возникновении ошибки (без транзакции) не выполняется откат транзакции
         /// </summary>
-        [Test]
+        [Fact]
         public void ShouldNoRollbackWhenExceptionWithoutTransaction()
         {
             var provider = new Mock<ITransformationProvider>();

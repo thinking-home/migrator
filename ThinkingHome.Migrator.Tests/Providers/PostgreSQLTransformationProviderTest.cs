@@ -1,12 +1,10 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
 using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Providers.PostgreSQL;
 
 namespace ThinkingHome.Migrator.Tests.Providers
 {
-    [TestFixture, Category("PostgreSQL")]
     public class PostgreSQLTransformationProviderTest : TransformationProviderTestBase
     {
         public override ITransformationProvider CreateProvider(ILogger logger = null)
