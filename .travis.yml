@@ -8,6 +8,6 @@ services:
 before_script:
   - psql -c "CREATE DATABASE migrations;" -U postgres
   - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres  
-  - psql -c 'CREATE SCHEMA "Moo4" AUTHORIZATION migrator;' -U postgres  
+  - psql -c 'CREATE SCHEMA "Moo4" AUTHORIZATION migrator;' -U postgres -d migrations  
 script:  
   - sh ./build.sh
