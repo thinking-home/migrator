@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Provi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Tests", "ThinkingHome.Migrator.Tests\ThinkingHome.Migrator.Tests.csproj", "{ECCAA5B6-B0C0-419A-8B32-CA61BE11F731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SQLite", "ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj", "{700B3BD1-0CC2-432F-B2A3-D7EC2139992C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SQLite", "ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj", "{90C45452-6C55-4F56-BE8F-2E3C5B19D548}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Tests2", "ThinkingHome.Migrator.Tests2\ThinkingHome.Migrator.Tests2.csproj", "{4AB6FC8F-B79D-4A7C-B6C4-D07DA4660829}"
 EndProject
@@ -41,6 +41,10 @@ Global
 		{4AB6FC8F-B79D-4A7C-B6C4-D07DA4660829}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AB6FC8F-B79D-4A7C-B6C4-D07DA4660829}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AB6FC8F-B79D-4A7C-B6C4-D07DA4660829}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C45452-6C55-4F56-BE8F-2E3C5B19D548}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C45452-6C55-4F56-BE8F-2E3C5B19D548}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C45452-6C55-4F56-BE8F-2E3C5B19D548}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C45452-6C55-4F56-BE8F-2E3C5B19D548}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
