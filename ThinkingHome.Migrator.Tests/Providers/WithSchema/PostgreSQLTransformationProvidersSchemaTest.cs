@@ -4,12 +4,12 @@
     {
         protected override string GetSchemaForCreateTables()
         {
-            return "Moo4";
+            return "Moo";
         }
 
         protected override string GetSchemaForCompare()
         {
-            return "Moo4";
+            return "Moo";
         }
     }
 }
