@@ -1,17 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Package.xml" />
   <PropertyGroup>
-    <VersionPrefix>3.0.0-alpha8</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DebugType>portable</DebugType>
-    <AssemblyName>ThinkingHome.Migrator.Providers.SQLite</AssemblyName>
-    <PackageId>ThinkingHome.Migrator.Providers.SQLite</PackageId>
-    <NetStandardImplicitPackageVersion>2.0.0-preview2-25401-01</NetStandardImplicitPackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../ThinkingHome.Migrator/ThinkingHome.Migrator.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0-preview2-final" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0-preview2-final" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
   </ItemGroup>
 </Project>
