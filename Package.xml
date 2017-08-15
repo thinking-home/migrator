@@ -1,0 +1,17 @@
+<Project>
+    <PropertyGroup>
+        <VersionPrefix>3.0.0</VersionPrefix>
+        <VersionSuffix>alpha9</VersionSuffix>
+
+        <Authors>Dmitry Andriyanov &lt;dima117a@gmail.com&gt;</Authors>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Copyright>Thinking-Home.RU © 2017</Copyright>
+
+        <PackageTags>thinking-home;db;migrations</PackageTags>
+        <PackageProjectUrl>https://github.com/thinking-home/migrator</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/thinking-home/migrator/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <RepositoryUrl>https://github.com/thinking-home/migrator.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+</Project>

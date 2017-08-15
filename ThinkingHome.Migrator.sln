@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SQLite", "ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj", "{90C45452-6C55-4F56-BE8F-2E3C5B19D548}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{C6635031-FA92-4E32-8DAD-09FB0A1C3DE6}"
+ProjectSection(SolutionItems) = preProject
+	Package.xml = Package.xml
+	.travis.yml = .travis.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
