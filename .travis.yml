@@ -1,14 +1,18 @@
-language: csharp  
-sudo: required  
+language: csharp
+sudo: required
 mono: none
 dotnet: 2.0.0
-dist: trusty  
+dist: trusty
 services:
+  - docker
   - postgresql
 before_script:
   - psql -c "CREATE DATABASE migrations;" -U postgres
-  - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres  
-  - psql -c 'CREATE SCHEMA "Moo" AUTHORIZATION migrator;' -U postgres -d migrations  
+  - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres
+  - psql -c 'CREATE SCHEMA "Moo" AUTHORIZATION migrator;' -U postgres -d migrations
+  - docker run --name mssql -v $(pwd)/prepare-mssql.sh:/prepare-mssql.sh -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 -d microsoft/mssql-server-linux
+  - docker ps -a
+  - docker exec mssql /prepare-mssql.sh
   - dotnet restore
-script:  
+script:
   - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.0

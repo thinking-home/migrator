@@ -14,9 +14,9 @@ using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstrain
 namespace ThinkingHome.Migrator.Tests
 {
     public static class Assert2 {
-    
+
         // number comparison without type equality
-    
+
         public static void Equal(int x, object y) {
             Assert.Equal(Convert.ToInt64(x), Convert.ToInt64(y));
         }
@@ -101,6 +101,11 @@ namespace ThinkingHome.Migrator.Tests
         [Fact]
         public void CanExecuteBatches()
         {
+            if (provider.TableExists("BatchSqlTest"))
+            {
+                provider.RemoveTable("BatchSqlTest");
+            }
+
             provider.AddTable("BatchSqlTest",
                 new Column("Id", DbType.Int32, ColumnProperty.PrimaryKey),
                 new Column("TestId", DbType.Int32));

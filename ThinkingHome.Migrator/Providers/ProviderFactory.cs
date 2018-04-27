@@ -45,6 +45,7 @@ namespace ThinkingHome.Migrator.Providers
         private static readonly Dictionary<string, string> shortcuts = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             { "postgres", "ThinkingHome.Migrator.Providers.PostgreSQL.PostgreSQLProviderFactory, ThinkingHome.Migrator.Providers.PostgreSQL" },
+            { "mssql", "ThinkingHome.Migrator.Providers.SqlServer.SqlServerProviderFactory, ThinkingHome.Migrator.Providers.SqlServer" },
             { "sqlite",   "ThinkingHome.Migrator.Providers.SQLite.SQLiteProviderFactory, ThinkingHome.Migrator.Providers.SQLite" }
         };
 
