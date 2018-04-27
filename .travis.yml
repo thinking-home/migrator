@@ -10,10 +10,9 @@ before_script:
   - psql -c "CREATE DATABASE migrations;" -U postgres
   - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres
   - psql -c 'CREATE SCHEMA "Moo" AUTHORIZATION migrator;' -U postgres -d migrations
-  - docker run --name mssql -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 -d microsoft/mssql-server-linux
+  - docker run --name mssql -v $(pwd)/prepare-mssql.sh:/prepare-mssql.sh -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 -d microsoft/mssql-server-linux
   - docker ps -a
-  - 'docker exec mssql /opt/mssql-tools/bin/sqlcmd -U sa -P "x987(!)654" -Q "CREATE DATABASE migrations"'
-  - 'docker exec mssql /opt/mssql-tools/bin/sqlcmd -U sa -P "x987(!)654" -Q "use migrations;exec sp_executesql N'"'"'CREATE SCHEMA Moo'"'"'"'
+  - docker exec mssql /prepare-mssql.sh
   - dotnet restore
 script:
   - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.0

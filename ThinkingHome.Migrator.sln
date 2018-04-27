@@ -18,6 +18,7 @@ ProjectSection(SolutionItems) = preProject
 	Package.xml = Package.xml
 	.travis.yml = .travis.yml
 	README.md = README.md
+	prepare-mssql.sh = prepare-mssql.sh
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SqlServer", "ThinkingHome.Migrator.Providers.SqlServer\ThinkingHome.Migrator.Providers.SqlServer.csproj", "{4FEFFED2-71BA-46CB-A4C9-13B54CF5672A}"
