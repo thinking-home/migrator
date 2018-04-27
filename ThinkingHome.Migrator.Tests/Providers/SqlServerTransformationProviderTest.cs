@@ -19,10 +19,9 @@ namespace ThinkingHome.Migrator.Tests.Providers
 			GO
 			insert into [BatchSqlTest] ([Id], [TestId]) values (33, 333)";
 
-	    protected override string GetSchemaForCompare()
+        protected override string GetSchemaForCompare()
         {
             return provider.ExecuteScalar("select SCHEMA_NAME()").ToString();
         }
-
     }
 }

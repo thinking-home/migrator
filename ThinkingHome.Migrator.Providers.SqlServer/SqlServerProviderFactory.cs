@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace ThinkingHome.Migrator.Providers.SqlServer
 {
     public class SqlServerProviderFactory :
-        ProviderFactory<SqlServerTransformationProvider,SqlConnection>
+        ProviderFactory<SqlServerTransformationProvider, SqlConnection>
     {
         protected override SqlServerTransformationProvider CreateProviderInternal(SqlConnection connection, ILogger logger)
         {

@@ -9,7 +9,6 @@ using ThinkingHome.Migrator.Framework.Extensions;
 
 namespace ThinkingHome.Migrator.Providers.SqlServer
 {
-
     /// <summary>
     /// Migration transformations provider for Microsoft SQL Server.
     /// </summary>
@@ -50,18 +49,20 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
             propertyMap.RegisterPropertySql(ColumnProperty.Identity, "IDENTITY");
         }
 
-		#region change default value
+        #region change default value
 
-		protected override string GetSqlChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue)
-		{
-			string dfConstraintName = $"DF_{Guid.NewGuid():N}";
-			string sqlDefaultValue = GetSqlDefaultValue(newDefaultValue);
-			return FormatSql("ALTER TABLE {0:NAME} ADD CONSTRAINT {1:NAME} {2} FOR {3:NAME}", table, dfConstraintName, sqlDefaultValue, column);
-		}
+        protected override string GetSqlChangeDefaultValue(
+            SchemaQualifiedObjectName table, string column, object newDefaultValue)
+        {
+            string dfConstraintName = $"DF_{Guid.NewGuid():N}";
+            string sqlDefaultValue = GetSqlDefaultValue(newDefaultValue);
+            return FormatSql("ALTER TABLE {0:NAME} ADD CONSTRAINT {1:NAME} {2} FOR {3:NAME}",
+                table, dfConstraintName, sqlDefaultValue, column);
+        }
 
         protected string GetDefaultConstraintName(SchemaQualifiedObjectName table, string column)
-		{
-			var sqlBuilder = new StringBuilder();
+        {
+            var sqlBuilder = new StringBuilder();
 
             sqlBuilder.Append(FormatSql("SELECT {0:NAME}.{1:NAME} AS {2:NAME} ", "dobj", "name", "CONSTRAINT_NAME"));
             sqlBuilder.Append(FormatSql("FROM {0:NAME} {1:NAME} ", "columns".WithSchema("sys"), "col"));
@@ -71,70 +72,70 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
             sqlBuilder.Append(FormatSql("WHERE {0:NAME}.{1:NAME} = object_id(N'{2}') AND {0:NAME}.{3:NAME} = '{4}'",
                 "col", "object_id", table, "name", column));
 
-			using (var reader = ExecuteReader(sqlBuilder.ToString()))
-			{
-				if (reader.Read())
-				{
-					return reader.GetString(0);
-				}
+            using (var reader = ExecuteReader(sqlBuilder.ToString()))
+            {
+                if (reader.Read())
+                {
+                    return reader.GetString(0);
+                }
 
-				return null;
-			}
-		}
+                return null;
+            }
+        }
 
-		public override void ChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue)
-		{
-			string defaultConstraintName = GetDefaultConstraintName(table, column);
+        public override void ChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue)
+        {
+            string defaultConstraintName = GetDefaultConstraintName(table, column);
 
-			if (!string.IsNullOrWhiteSpace(defaultConstraintName))
-			{
-				RemoveConstraint(table, defaultConstraintName);
-			}
+            if (!string.IsNullOrWhiteSpace(defaultConstraintName))
+            {
+                RemoveConstraint(table, defaultConstraintName);
+            }
 
-			if (newDefaultValue != null)
-			{
-				string sql = GetSqlChangeDefaultValue(table, column, newDefaultValue);
-				ExecuteNonQuery(sql);
-			}
-		}
+            if (newDefaultValue != null)
+            {
+                string sql = GetSqlChangeDefaultValue(table, column, newDefaultValue);
+                ExecuteNonQuery(sql);
+            }
+        }
 
-		#endregion
+        #endregion
 
-		public override SchemaQualifiedObjectName[] GetTables(string schema = null)
-		{
-			string nspname = string.IsNullOrWhiteSpace(schema) ? "SCHEMA_NAME()" : $"'{schema}'";
+        public override SchemaQualifiedObjectName[] GetTables(string schema = null)
+        {
+            string nspname = string.IsNullOrWhiteSpace(schema) ? "SCHEMA_NAME()" : $"'{schema}'";
 
-			var tables = new List<SchemaQualifiedObjectName>();
+            var tables = new List<SchemaQualifiedObjectName>();
 
-			string sql = FormatSql("SELECT {0:NAME}, {1:NAME} FROM {2:NAME}.{3:NAME} where {4:NAME} = {5}",
-				"TABLE_NAME", "TABLE_SCHEMA", "INFORMATION_SCHEMA", "TABLES", "TABLE_SCHEMA", nspname);
+            string sql = FormatSql("SELECT {0:NAME}, {1:NAME} FROM {2:NAME}.{3:NAME} where {4:NAME} = {5}",
+                "TABLE_NAME", "TABLE_SCHEMA", "INFORMATION_SCHEMA", "TABLES", "TABLE_SCHEMA", nspname);
 
-			using (IDataReader reader = ExecuteReader(sql))
-			{
-				while (reader.Read())
-				{
-					string tableName = reader.GetString(0);
-					string tableSchema = reader.GetString(1);
-					tables.Add(tableName.WithSchema(tableSchema));
-				}
-			}
+            using (IDataReader reader = ExecuteReader(sql))
+            {
+                while (reader.Read())
+                {
+                    string tableName = reader.GetString(0);
+                    string tableSchema = reader.GetString(1);
+                    tables.Add(tableName.WithSchema(tableSchema));
+                }
+            }
 
-			return tables.ToArray();
-		}
+            return tables.ToArray();
+        }
 
-		public override bool TableExists(SchemaQualifiedObjectName table)
-		{
-			string nspname = table.SchemaIsEmpty ? "SCHEMA_NAME()" : $"'{table.Schema}'";
+        public override bool TableExists(SchemaQualifiedObjectName table)
+        {
+            string nspname = table.SchemaIsEmpty ? "SCHEMA_NAME()" : $"'{table.Schema}'";
 
-			string sql = FormatSql(
+            string sql = FormatSql(
                 "SELECT * FROM {0:NAME} WHERE {1:NAME}='{2}' AND {3:NAME} = {4}",
                 "TABLES".WithSchema("INFORMATION_SCHEMA"), "TABLE_NAME", table.Name, "TABLE_SCHEMA", nspname);
 
-			using (IDataReader reader = ExecuteReader(sql))
-			{
-				return reader.Read();
-			}
-		}
+            using (IDataReader reader = ExecuteReader(sql))
+            {
+                return reader.Read();
+            }
+        }
 
         #region generate sql
 
@@ -165,8 +166,8 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
             return FormatSql("ALTER TABLE {0:NAME} ADD {1}", table, columnSql);
         }
 
-        protected override string GetSqlRenameColumn(SchemaQualifiedObjectName tableName, string oldColumnName,
-            string newColumnName)
+        protected override string GetSqlRenameColumn(
+            SchemaQualifiedObjectName tableName, string oldColumnName, string newColumnName)
         {
             return FormatSql("EXEC sp_rename '{0}.{1}', '{2}', 'COLUMN'", tableName, oldColumnName, newColumnName);
         }
