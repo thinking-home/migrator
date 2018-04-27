@@ -3,3 +3,9 @@
 Версионная миграция структуры БД для .NET Core.
 
 Документация [здесь](https://github.com/dima117/ecm7migrator).
+
+Запуск mssql для тестов
+
+```sh
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=123(!)456' -p 1433:1433 microsoft/mssql-server-linux
+```
