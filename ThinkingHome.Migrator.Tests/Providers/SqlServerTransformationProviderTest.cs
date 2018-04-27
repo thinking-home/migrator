@@ -9,7 +9,7 @@ namespace ThinkingHome.Migrator.Tests.Providers
         public override ITransformationProvider CreateProvider(ILogger logger = null)
         {
             return new SqlServerProviderFactory()
-                .CreateProvider("Server=localhost;Database=master;User Id=sa;Password=x987(!)654;", logger);
+                .CreateProvider("Server=localhost;Database=migrations;User Id=sa;Password=x987(!)654;", logger);
         }
 
         protected override string BatchSql => @"
