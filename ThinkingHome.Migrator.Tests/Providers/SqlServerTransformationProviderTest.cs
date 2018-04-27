@@ -13,11 +13,11 @@ namespace ThinkingHome.Migrator.Tests.Providers
         }
 
         protected override string BatchSql => @"
-			insert into [BatchSqlTest] ([Id], [TestId]) values (11, 111)
-			GO
-			insert into [BatchSqlTest] ([Id], [TestId]) values (22, 222)
-			GO
-			insert into [BatchSqlTest] ([Id], [TestId]) values (33, 333)";
+            insert into [BatchSqlTest] ([Id], [TestId]) values (11, 111)
+            GO
+            insert into [BatchSqlTest] ([Id], [TestId]) values (22, 222)
+            GO
+            insert into [BatchSqlTest] ([Id], [TestId]) values (33, 333)";
 
         protected override string GetSchemaForCompare()
         {
