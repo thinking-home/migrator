@@ -13,9 +13,7 @@ namespace ThinkingHome.Migrator.Providers
     {
         protected SqlRunner(IDbConnection connection, ILogger logger)
         {
-            if (connection == null) throw new ArgumentNullException(nameof(connection));
-
-            Connection = connection;
+            Connection = connection ?? throw new ArgumentNullException(nameof(connection));
             Logger = new MigrationLogger(logger);
         }
 

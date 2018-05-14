@@ -9,3 +9,13 @@
 ```sh
 docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 microsoft/mssql-server-linux
 ```
+
+Запуск mysql для тестов
+
+```sh
+docker run --name=mysql1 -d -p 3306:3306\
+           -e 'MYSQL_DATABASE=migrations'\
+           -e 'MYSQL_USER=migrator'\
+           -e 'MYSQL_PASSWORD=123'\
+           mysql/mysql-server
+```

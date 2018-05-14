@@ -1,6 +1,8 @@
 ﻿using Xunit;
 using ThinkingHome.Migrator.Providers;
+using ThinkingHome.Migrator.Providers.MySql;
 using ThinkingHome.Migrator.Providers.PostgreSQL;
+using ThinkingHome.Migrator.Providers.SqlServer;
 using ThinkingHome.Migrator.Providers.SQLite;
 
 namespace ThinkingHome.Migrator.Tests
@@ -19,6 +21,18 @@ namespace ThinkingHome.Migrator.Tests
         public void SQLiteShortcutTest()
         {
             Assert.True(ProviderFactory.Create("SQLite") is SQLiteProviderFactory);
+        }
+
+        [Fact]
+        public void SqlServerShortcutTest()
+        {
+            Assert.True(ProviderFactory.Create("SqlServer") is SqlServerProviderFactory);
+        }
+
+        [Fact]
+        public void MySqlShortcutTest()
+        {
+            Assert.True(ProviderFactory.Create("MySql") is MySqlProviderFactory);
         }
 
         #endregion

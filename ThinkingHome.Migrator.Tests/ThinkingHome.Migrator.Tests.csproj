@@ -13,6 +13,7 @@
     <ProjectReference Include="../ThinkingHome.Migrator.Providers.SQLite/ThinkingHome.Migrator.Providers.SQLite.csproj" />
     <ProjectReference Include="../ThinkingHome.Migrator.Providers.PostgreSQL/ThinkingHome.Migrator.Providers.PostgreSQL.csproj" />
     <ProjectReference Include="../ThinkingHome.Migrator.Providers.SqlServer/ThinkingHome.Migrator.Providers.SqlServer.csproj" />
+    <ProjectReference Include="..\ThinkingHome.Migrator.Providers.MySql\ThinkingHome.Migrator.Providers.MySql.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
