@@ -156,7 +156,7 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
 
         public override bool TableExists(SchemaQualifiedObjectName table)
         {
-            string nspname = table.SchemaIsEmpty ? "current_schema()" : string.Format("'{0}'", table.Schema);
+            string nspname = table.SchemaIsEmpty ? "current_schema()" : $"'{table.Schema}'";
 
             string sql = FormatSql(
                 "SELECT {0:NAME} FROM {1:NAME}.{2:NAME} WHERE {3:NAME} = {4} AND {5:NAME} = '{6}'",
