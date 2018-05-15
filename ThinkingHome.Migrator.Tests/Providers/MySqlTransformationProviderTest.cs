@@ -13,7 +13,7 @@ namespace ThinkingHome.Migrator.Tests.Providers
         public override ITransformationProvider CreateProvider(ILogger logger = null)
         {
             return new MySqlProviderFactory()
-                .CreateProvider("Database=migrations;Data Source=localhost;User Id=migrator;Password=123;", logger);
+                .CreateProvider("Database=migrations;Data Source=localhost;User Id=migrator;Password=123;SslMode=none;", logger);
         }
 
         #region Overrides of TransformationProviderTestBase<MySqlTransformationProvider>
