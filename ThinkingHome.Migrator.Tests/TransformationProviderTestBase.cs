@@ -11,6 +11,8 @@ using ThinkingHome.Migrator.Framework.Interfaces;
 using ThinkingHome.Migrator.Framework.Extensions;
 using ForeignKeyConstraint = ThinkingHome.Migrator.Framework.ForeignKeyConstraint;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace ThinkingHome.Migrator.Tests
 {
     public static class Assert2 {
