@@ -60,6 +60,24 @@ namespace ThinkingHome.Migrator.Tests.Providers
 			Assert.Throws<NotSupportedException>((Action) base.CanAddForeignKeyWithUpdateSetDefault);
 		}
 
+	    public override void CanRollbackTransactions()
+	    {
+		    provider.AddTable("transtest3", new Column("id", DbType.Int32));
+
+		    provider.BeginTransaction();
+
+		    provider.Insert("transtest3", new {id = 1});
+		    provider.Insert("transtest3", new {id = 2});
+
+		    Assert.Equal(2, (long) provider.ExecuteScalar("select count(*) from transtest3"));
+
+		    provider.Rollback();
+
+		    Assert.Equal(0, (long) provider.ExecuteScalar("select count(*) from transtest3"));
+
+		    provider.TableExists("transtest3");
+	    }
+
 		#region primary key
 
 		// проверка, что в MySQL первичный ключ всегда называется "PRIMARY"
