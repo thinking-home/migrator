@@ -15,11 +15,11 @@ docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 micros
 ```sh
 docker run --name=mysql1 -d -p 3306:3306\
     -e 'MYSQL_ROOT_HOST=%'\
-    -e 'MYSQL_ROOT_PASSWORD=123'\
-    -e 'MYSQL_DATABASE=migrations'\
-    -e 'MYSQL_USER=migrator'\
-    -e 'MYSQL_PASSWORD=123'\
+    -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true'\
+    -v $(pwd)/bash/init-mysql.sh:/init-mysql.sh\
     mysql/mysql-server
+
+docker exec mysql1 /init-mysql.sh
 ```
 
 Запуск PostgreSQL для тестов
