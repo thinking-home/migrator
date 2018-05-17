@@ -62,20 +62,22 @@ namespace ThinkingHome.Migrator.Tests.Providers
 
         public override void CanRollbackTransactions()
         {
-            provider.AddTable("transtest3", new Column("id", DbType.Int32));
+            var primaryTable = GetRandomTableName("transtest3");
+            provider.AddTable(primaryTable, new Column("id", DbType.Int32));
 
             provider.BeginTransaction();
 
-            provider.Insert("transtest3", new {id = 1});
-            provider.Insert("transtest3", new {id = 2});
+            provider.Insert(primaryTable, new {id = 1});
+            provider.Insert(primaryTable, new {id = 2});
 
-            Assert.Equal(2, (long) provider.ExecuteScalar("select count(*) from transtest3"));
+            var countSql = provider.FormatSql("select count(*) from {0:NAME}", primaryTable);
+            Assert.Equal(2, (long) provider.ExecuteScalar(countSql));
 
             provider.Rollback();
 
-            Assert.Equal(0, (long) provider.ExecuteScalar("select count(*) from transtest3"));
+            Assert.Equal(0, (long) provider.ExecuteScalar(countSql));
 
-            provider.TableExists("transtest3");
+            provider.TableExists(primaryTable);
         }
 
         #region primary key
