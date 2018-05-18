@@ -7,13 +7,19 @@
 Запуск mssql для тестов
 
 ```sh
-docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 microsoft/mssql-server-linux
+docker run --name mssql -d -p 1433:1433\
+    -e 'ACCEPT_EULA=Y'\
+    -e 'SA_PASSWORD=x987(!)654'\
+    -v $(pwd)/bash/init-mssql.sh:/init-mssql.sh\
+    microsoft/mssql-server-linux
+
+docker exec mssql /init-mssql.sh
 ```
 
 Запуск mysql для тестов
 
 ```sh
-docker run --name=mysql1 -d -p 3306:3306\
+docker run --name mysql1 -d -p 3306:3306\
     -e 'MYSQL_ROOT_HOST=%'\
     -e 'MYSQL_ALLOW_EMPTY_PASSWORD=true'\
     -v $(pwd)/bash/init-mysql.sh:/init-mysql.sh\
@@ -31,3 +37,10 @@ docker run --name postgres -d -p 5432:5432\
     -e POSTGRES_DB=migrations\
     postgres
 ```
+
+### todo
+
+- [ ] починить тесты mysql в travis
+- [ ] вынести инициализацию в sh, написать команды для локального запуска  всех БД в docker, использовать общую инициализацию для travis и локально
+- [ ] перенести в проект документацию и актуализировать
+- [ ] написать консольную утилиту

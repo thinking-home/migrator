@@ -18,7 +18,6 @@ ProjectSection(SolutionItems) = preProject
 	Package.xml = Package.xml
 	.travis.yml = .travis.yml
 	README.md = README.md
-	prepare-mssql.sh = prepare-mssql.sh
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.SqlServer", "ThinkingHome.Migrator.Providers.SqlServer\ThinkingHome.Migrator.Providers.SqlServer.csproj", "{4FEFFED2-71BA-46CB-A4C9-13B54CF5672A}"
@@ -28,6 +27,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bash", "bash", "{F3944223-17F2-42B3-9ECC-D171CF4ABD34}"
 ProjectSection(SolutionItems) = preProject
 	bash\init-mysql.sh = bash\init-mysql.sh
+	bash\init-mssql.sh = bash\init-mssql.sh
 EndProjectSection
 EndProject
 Global
