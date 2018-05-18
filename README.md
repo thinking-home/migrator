@@ -32,15 +32,15 @@ docker exec mysql1 /init-mysql.sh
 
 ```sh
 docker run --name postgres -d -p 5432:5432\
-    -e POSTGRES_PASSWORD=123\
-    -e POSTGRES_USER=migrator\
-    -e POSTGRES_DB=migrations\
+    -v $(pwd)/bash/init-postgres.sh:/init-postgres.sh\
     postgres
+
+docker exec postgres /init-postgres.sh
 ```
 
 ### todo
 
 - [ ] починить тесты mysql в travis
-- [ ] вынести инициализацию в sh, написать команды для локального запуска  всех БД в docker, использовать общую инициализацию для travis и локально
+- [x] вынести инициализацию в sh, написать команды для локального запуска  всех БД в docker, использовать общую инициализацию для travis и локально
 - [ ] перенести в проект документацию и актуализировать
 - [ ] написать консольную утилиту

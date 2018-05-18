@@ -8,10 +8,8 @@ services:
   - postgresql
   - mysql
 before_script:
-  - psql -c "CREATE DATABASE migrations;" -U postgres
-  - psql -c "CREATE USER migrator WITH PASSWORD '123';" -U postgres
-  - psql -c 'CREATE SCHEMA "Moo" AUTHORIZATION migrator;' -U postgres -d migrations
   - ./bash/init-mysql.sh
+  - ./bash/init-postgres.sh
   - docker run --name mssql -v $(pwd)/bash/init-mssql.sh:/init-mssql.sh -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 -d microsoft/mssql-server-linux
   - docker exec mssql /init-mssql.sh
   - dotnet restore

@@ -28,6 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bash", "bash", "{F3944223-1
 ProjectSection(SolutionItems) = preProject
 	bash\init-mysql.sh = bash\init-mysql.sh
 	bash\init-mssql.sh = bash\init-mssql.sh
+	bash\init-postgres.sh = bash\init-postgres.sh
 EndProjectSection
 EndProject
 Global
