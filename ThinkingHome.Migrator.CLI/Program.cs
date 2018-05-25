@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using McMaster.Extensions.CommandLineUtils;
@@ -20,7 +21,7 @@ namespace ThinkingHome.Migrator.CLI
 
                 var logger = loggerFactory.CreateLogger("migrate-database");
 
-                var asm = Assembly.LoadFile(assemblyPath);
+                var asm = Assembly.LoadFrom(Path.GetFullPath(assemblyPath));
 
                 using (var migrator = new Migrator(provider, connectionString, asm, logger))
                 {
@@ -95,7 +96,7 @@ namespace ThinkingHome.Migrator.CLI
 
             var listOption = app.Option("-l|--list",
                 "Show migration list instead of executing migrations.",
-                CommandOptionType.SingleValue);
+                CommandOptionType.NoValue);
 
             app.OnExecute(() => Invoke(
                 argProvider.Value,
