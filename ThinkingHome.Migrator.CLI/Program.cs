@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using ThinkingHome.Migrator.Framework.Extensions;
 
 namespace ThinkingHome.Migrator.CLI
@@ -13,11 +14,16 @@ namespace ThinkingHome.Migrator.CLI
         private const long DEFAULT_VERSION = -1;
 
         private static int Invoke(string provider, string connectionString, string assemblyPath,
-            CommandOption versionOption, CommandOption timeoutOption, CommandOption listOption)
+            CommandOption versionOption, CommandOption timeoutOption,
+            CommandOption verboseOption, CommandOption listOption)
         {
             using (var loggerFactory = new LoggerFactory())
             {
-                loggerFactory.AddConsole();
+                var logLevel = verboseOption.HasValue()
+                    ? LogLevel.Trace
+                    : LogLevel.Information;
+
+                loggerFactory.AddConsole(logLevel);
 
                 var logger = loggerFactory.CreateLogger("migrate-database");
 
@@ -86,15 +92,19 @@ namespace ThinkingHome.Migrator.CLI
             var argConnectionString = app.Argument("connectionString", "Database connection string");
             var argAssembly = app.Argument("assembly", "Assembly which contains the set of migrations");
 
-            var versionOption = app.Option("-v|--version <version>",
+            var versionOption = app.Option("--version <version>",
                 "Target database version. Use -1",
                 CommandOptionType.SingleValue);
 
-            var timeoutOption = app.Option("-t|--timeout <timeout>",
+            var timeoutOption = app.Option("--timeout <timeout>",
                 "SQL command timeout (in seconds).",
                 CommandOptionType.SingleValue);
 
-            var listOption = app.Option("-l|--list",
+            var verboseOption = app.Option("--verbose",
+                "Set the verbosity mode of the command.",
+                CommandOptionType.NoValue);
+
+            var listOption = app.Option("--list",
                 "Show migration list instead of executing migrations.",
                 CommandOptionType.NoValue);
 
@@ -104,8 +114,8 @@ namespace ThinkingHome.Migrator.CLI
                 argAssembly.Value,
                 versionOption,
                 timeoutOption,
+                verboseOption,
                 listOption));
-
             try
             {
                 app.Execute(args);
