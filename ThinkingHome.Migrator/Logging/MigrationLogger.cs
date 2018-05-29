@@ -153,7 +153,7 @@ namespace ThinkingHome.Migrator.Logging
                 msg.AppendLine($"{mi.Version.ToString().PadLeft(5)} {mi.Type.Name.ToHumanName()}");
             }
 
-            Info(msg.ToString());
+            Trace(msg.ToString());
         }
 
         #endregion

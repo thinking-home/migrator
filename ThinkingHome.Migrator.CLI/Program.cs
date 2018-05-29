@@ -68,7 +68,7 @@ namespace ThinkingHome.Migrator.CLI
             foreach (var info in migrator.AvailableMigrations)
             {
                 var v = info.Version;
-                var marker = appliedMigrations.Contains(v) ? "✓" : " ";
+                var marker = appliedMigrations.Contains(v) ? "✓" : "  ";
                 var displayVersion = v.ToString().PadLeft(3);
                 var displayName = info.Type.Name.ToHumanName();
 
