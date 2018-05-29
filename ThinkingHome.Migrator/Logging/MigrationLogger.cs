@@ -20,6 +20,11 @@ namespace ThinkingHome.Migrator.Logging
 
         #region basic
 
+        public void Trace(string msg)
+        {
+            logger?.LogTrace(msg);
+        }
+
         public void Info(string msg)
         {
             logger?.LogInformation(msg);
@@ -93,7 +98,7 @@ namespace ThinkingHome.Migrator.Logging
         /// <param name="sql">Текст SQL запроса</param>
         public void ExecuteSql(string sql)
         {
-            Info(sql);
+            Trace(sql);
         }
 
         /// <summary>
@@ -148,7 +153,7 @@ namespace ThinkingHome.Migrator.Logging
                 msg.AppendLine($"{mi.Version.ToString().PadLeft(5)} {mi.Type.Name.ToHumanName()}");
             }
 
-            Info(msg.ToString());
+            Trace(msg.ToString());
         }
 
         #endregion

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Package.xml" />
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>migrate-database</ToolCommandName>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThinkingHome.Migrator.Providers.PostgreSQL\ThinkingHome.Migrator.Providers.PostgreSQL.csproj" />
+    <ProjectReference Include="..\ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj" />
+    <ProjectReference Include="..\ThinkingHome.Migrator.Providers.SqlServer\ThinkingHome.Migrator.Providers.SqlServer.csproj" />
+    <ProjectReference Include="..\ThinkingHome.Migrator\ThinkingHome.Migrator.csproj" />
+  </ItemGroup>
+</Project>
