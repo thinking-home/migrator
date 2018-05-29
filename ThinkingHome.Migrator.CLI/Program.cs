@@ -1,12 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using McMaster.Extensions.CommandLineUtils;
-using McMaster.Extensions.CommandLineUtils.Validation;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using ThinkingHome.Migrator.Framework.Extensions;
 
 namespace ThinkingHome.Migrator.CLI
