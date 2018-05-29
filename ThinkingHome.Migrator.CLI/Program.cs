@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using McMaster.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils.Validation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using ThinkingHome.Migrator.Framework.Extensions;
@@ -13,9 +15,9 @@ namespace ThinkingHome.Migrator.CLI
     {
         private const long DEFAULT_VERSION = -1;
 
-        private static int Invoke(string provider, string connectionString, string assemblyPath,
-            CommandOption versionOption, CommandOption timeoutOption,
-            CommandOption verboseOption, CommandOption listOption)
+        private static CommandOption versionOption, timeoutOption, verboseOption, listOption;
+
+        private static int Invoke(string provider, string connectionString, string assemblyPath)
         {
             using (var loggerFactory = new LoggerFactory())
             {
@@ -68,7 +70,7 @@ namespace ThinkingHome.Migrator.CLI
             foreach (var info in migrator.AvailableMigrations)
             {
                 var v = info.Version;
-                var marker = appliedMigrations.Contains(v) ? "✓" : "  ";
+                var marker = appliedMigrations.Contains(v) ? "*" : " ";
                 var displayVersion = v.ToString().PadLeft(3);
                 var displayName = info.Type.Name.ToHumanName();
 
@@ -88,41 +90,38 @@ namespace ThinkingHome.Migrator.CLI
             app.HelpOption("-?|-h|--help");
             app.ExtendedHelpText = "\nSee the details on https://github.com/thinking-home/migrator#readme.";
 
-            var argProvider = app.Argument("provider", "Database provider alias or class name");
-            var argConnectionString = app.Argument("connectionString", "Database connection string");
-            var argAssembly = app.Argument("assembly", "Assembly which contains the set of migrations");
+            var argProvider = app.Argument("provider", "Database provider alias or class name").IsRequired();
+            var argConnectionString = app.Argument("connectionString", "Database connection string").IsRequired();
+            var argAssembly = app.Argument("assembly", "Assembly which contains the set of migrations").IsRequired();
 
-            var versionOption = app.Option("--version <version>",
-                "Target database version. Use -1",
+            versionOption = app.Option("--version <version>",
+                "Target database version. Use -1 to migrate to the latest available version",
                 CommandOptionType.SingleValue);
 
-            var timeoutOption = app.Option("--timeout <timeout>",
+            timeoutOption = app.Option("--timeout <timeout>",
                 "SQL command timeout (in seconds).",
                 CommandOptionType.SingleValue);
 
-            var verboseOption = app.Option("--verbose",
+            verboseOption = app.Option("--verbose",
                 "Set the verbosity mode of the command.",
                 CommandOptionType.NoValue);
 
-            var listOption = app.Option("--list",
+            listOption = app.Option("--list",
                 "Show migration list instead of executing migrations.",
                 CommandOptionType.NoValue);
 
             app.OnExecute(() => Invoke(
                 argProvider.Value,
                 argConnectionString.Value,
-                argAssembly.Value,
-                versionOption,
-                timeoutOption,
-                verboseOption,
-                listOption));
+                argAssembly.Value));
             try
             {
                 app.Execute(args);
             }
             catch (CommandParsingException e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
+                app.ShowHelp();
                 Environment.ExitCode = 1;
             }
         }
