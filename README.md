@@ -1,11 +1,14 @@
 # ThinkingHome.Migrator [![Travis](https://img.shields.io/travis/thinking-home/migrator.svg)](https://travis-ci.org/thinking-home/migrator) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/ThinkingHome.Migrator.Framework.svg)](https://www.nuget.org/packages?q=thinkinghome.migrator)
 
-Версионная миграция структуры БД для .NET Core.
+ThinkingHome.Migrator — инструмент для версионной миграции структуры БД для платформы .NET Core.
 
-Документация [здесь](https://github.com/dima117/ecm7migrator).
+ThinkingHome.Migrator похож на EntityFramework Migrations. Он помогает легче менять структуру БД и обеспечивает контроль версий БД.
 
-Запуск mssql для тестов
+Поддерживаемые СУБД: MS SQL Server, PostgreSQL, MySQL, SQLite. 
 
-```sh
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 microsoft/mssql-server-linux
-```
+1. [Обзор](docs/overview.md);
+1. [Начало работы](docs/getting-started.md);
+1. [Описание классов миграций](docs/writing-migrations.md);
+1. [Выполнение миграций](docs/how-to-run.md);
+1. [Использование с различными СУБД](docs/dialects.md);
+1. [Разработка](docs/development.md)

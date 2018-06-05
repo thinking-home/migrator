@@ -25,6 +25,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Provi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.CLI", "ThinkingHome.Migrator.CLI\ThinkingHome.Migrator.CLI.csproj", "{344FE9F3-6E88-4FA1-9B8D-7B9BEAB94F3F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{874555E3-01E1-4E3F-A559-DC7748A00AD7}"
+ProjectSection(SolutionItems) = preProject
+	docs\overview.md = docs\overview.md
+	docs\development.md = docs\development.md
+	docs\dialects.md = docs\dialects.md
+	docs\how-to-run.md = docs\how-to-run.md
+	docs\writing-migrations.md = docs\writing-migrations.md
+	docs\getting-started.md = docs\getting-started.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
