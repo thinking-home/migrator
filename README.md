@@ -1,4 +1,4 @@
-# ThinkingHome.Migrator [![Travis](https://img.shields.io/travis/thinking-home/migrator.svg)](https://travis-ci.org/thinking-home/migrator) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/ThinkingHome.Migrator.Framework.svg)](https://www.nuget.org/packages?q=thinkinghome.migrator)
+# ThinkingHome.Migrator [![Travis](https://api.travis-ci.org/thinking-home/migrator.svg?branch=master)](https://travis-ci.org/thinking-home/migrator) [![NuGet Pre Release](https://img.shields.io/nuget/vpre/ThinkingHome.Migrator.Framework.svg)](https://www.nuget.org/packages?q=thinkinghome.migrator)
 
 ThinkingHome.Migrator — инструмент для версионной миграции структуры БД для платформы .NET Core.
 
