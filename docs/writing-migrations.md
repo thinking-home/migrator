@@ -114,26 +114,43 @@ public override void Apply()
 
 ### Операции с таблицами
 
+Создание новой таблицы:
+
 ```c#
 void AddTable(SchemaQualifiedObjectName name, params Column[] columns);
 ```
+
+> Первый аргумент - название, дальше - список столбцов таблицы. Для каждого столбца нужно указать название и тип, а также можно указать дополнительные свойства (например, `NOT NULL`)
+
+```c#
+Database.AddTable("my_table",
+    new Column("Id", DbType.Int32, ColumnProperty.Identity),
+    new Column("Name", DbType.String.WithSize(50), ColumnProperty.NotNull));
+```
+
+Проверить, что существует таблица с заданным именем
 
 ```c#
 bool TableExists(SchemaQualifiedObjectName tableName);
 ```
 
+Получить список таблиц в заданной схеме
+
 ```c#
 SchemaQualifiedObjectName[] GetTables(string schema = null);
 ```
+
+Переименовать таблицу
 
 ```c#
 void RenameTable(SchemaQualifiedObjectName oldName, string newName);
 ```
 
+Удалить таблицу
+
 ```c#
 void RemoveTable(SchemaQualifiedObjectName tableName);
 ```
-
 
 ### Операции со столбцами таблиц
 
