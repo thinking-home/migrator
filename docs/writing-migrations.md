@@ -82,8 +82,8 @@ Database.AddColumn("my_table", new Column("test_string_column", DbType.String.Wi
 // добавить в таблицу "my_table" колонку "test_string_column" типа NVARCHAR(MAX)
 Database.AddColumn("my_table", new Column("test_string_column", DbType.String.WithSize(int.MaxValue)));
 
-// добавить в таблицу "my_table" колонку "test_string_column" типа NVARCHAR(MAX)
-Database.AddColumn("my_table", new Column("TestStringColumn", DbType.String.WithSize(7)));
+// добавить в таблицу "my_table" колонку "test_decimal_column" типа DECIMAL(10, 4)
+Database.AddColumn("my_table", new Column("test_decimal_column", DbType.Decimal.WithSize(10, 4)));
 ```
 
 
@@ -101,7 +101,7 @@ public override void Apply()
     // сборка, в которой находится текущая миграция
     var asm = GetType().Assembly;
 
-    // выполнить SQL скрипты из ресурсов dll - hазные для разных СУБД
+    // выполнить SQL скрипты из ресурсов dll - разные для разных СУБД
     Database.ConditionalExecuteAction()
         .For<PostgreSQLTransformationProvider>(db => db.ExecuteFromResource(asm, "file.for.postgres.sql"))
         .For<SqlServerTransformationProvider>(db => db.ExecuteFromResource(asm, "file.for.mssql.sql"))
@@ -120,33 +120,42 @@ public override void Apply()
 void AddTable(SchemaQualifiedObjectName name, params Column[] columns);
 ```
 
-> Первый аргумент - название, дальше - список столбцов таблицы. Для каждого столбца нужно указать название и тип, а также можно указать дополнительные свойства (например, `NOT NULL`)
+> Первый аргумент - название, дальше - список столбцов таблицы. Для каждого столбца нужно указать название и тип, а также можно указать дополнительные свойства (например, `NOT NULL`) и значение по умолчанию.
 
 ```c#
 Database.AddTable("my_table",
-    new Column("Id", DbType.Int32, ColumnProperty.Identity),
+    new Column("Id", DbType.Int32, ColumnProperty.PrimaryKeyWithIdentity),
     new Column("Name", DbType.String.WithSize(50), ColumnProperty.NotNull));
 ```
 
-Проверить, что существует таблица с заданным именем
+> Для создания таблицы с составным первичным ключом нужно указать для нескольких нужных колонок параметр `ColumnProperty.PrimaryKey`.
+
+```c#
+Database.AddTable("CustomerAddress",
+    new Column("customer_id", DbType.Int32, ColumnProperty.PrimaryKey),
+    new Column("address_id", DbType.Int32, ColumnProperty.PrimaryKey)
+);
+``` 
+
+Проверить, что существует таблица с заданным именем:
 
 ```c#
 bool TableExists(SchemaQualifiedObjectName tableName);
 ```
 
-Получить список таблиц в заданной схеме
+Получить список таблиц в заданной схеме:
 
 ```c#
 SchemaQualifiedObjectName[] GetTables(string schema = null);
 ```
 
-Переименовать таблицу
+Переименовать таблицу:
 
 ```c#
 void RenameTable(SchemaQualifiedObjectName oldName, string newName);
 ```
 
-Удалить таблицу
+Удалить таблицу:
 
 ```c#
 void RemoveTable(SchemaQualifiedObjectName tableName);
@@ -154,59 +163,93 @@ void RemoveTable(SchemaQualifiedObjectName tableName);
 
 ### Операции со столбцами таблиц
 
+Добавить столбец в таблицу:
+
 ```c#
 void AddColumn(SchemaQualifiedObjectName table, Column column);
 ```
+
+Проверить, что в таблице существует столбец с заданным именем:
 
 ```c#
 bool ColumnExists(SchemaQualifiedObjectName table, string column);
 ```
 
+Переименовать столбец таблицы:
+
 ```c#
 void RenameColumn(SchemaQualifiedObjectName tableName, string oldColumnName, string newColumnName);
 ```
+
+Изменить тип столбца или его возможность хранить значение `NULL`:
 
 ```c#
 void ChangeColumn(SchemaQualifiedObjectName table, string column, ColumnType columnType, bool notNull);
 ```
 
+Изменить для столбца таблицы значение по умолчанию:
+
 ```c#
 void ChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue);
 ```
+
+Удалить столбец таблицы:
 
 ```c#
 void RemoveColumn(SchemaQualifiedObjectName table, string column);
 ```
 
-
 ### Ограничения
+
+Создать первичный ключ:
 
 ```c#
 void AddPrimaryKey(string name, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
+> Можно указать несколько столбцов, чтобы создать составной первичный ключ:
+
+```c#
+Database.AddTable("CustomerAddress",
+    new Column("customer_id", DbType.Int32),
+    new Column("address_id", DbType.Int32)
+);
+
+Database.AddPrimaryKey("CustomerAddress", "customer_id", "address_id");
+```
+
+Создать внешний ключ:
+
 ```c#
 void AddForeignKey(
-            string name,
-            SchemaQualifiedObjectName primaryTable,
-            string[] primaryColumns,
-            SchemaQualifiedObjectName refTable,
-            string[] refColumns,
-            ForeignKeyConstraint onDeleteConstraint = ForeignKeyConstraint.NoAction,
-            ForeignKeyConstraint onUpdateConstraint = ForeignKeyConstraint.NoAction);
+        string name,
+        SchemaQualifiedObjectName primaryTable,
+        string[] primaryColumns,
+        SchemaQualifiedObjectName refTable,
+        string[] refColumns,
+        ForeignKeyConstraint onDeleteConstraint = ForeignKeyConstraint.NoAction,
+        ForeignKeyConstraint onUpdateConstraint = ForeignKeyConstraint.NoAction);
 ```
+
+Добавить ограничение на уникальность значений:
 
 ```c#
 void AddUniqueConstraint(string name, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
+Добавить ограничение по условию:
+
 ```c#
 void AddCheckConstraint(string name, SchemaQualifiedObjectName table, string checkSql);
 ```
 
+Проверить, существует ли ограничение с заданным именем:
+
 ```c#
 bool ConstraintExists(SchemaQualifiedObjectName table, string name);
 ```
+
+Удалить ограничение с заданным именем:
 
 ```c#
 void RemoveConstraint(SchemaQualifiedObjectName table, string name);
