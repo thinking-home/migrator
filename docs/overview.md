@@ -38,4 +38,5 @@ ThinkingHome.Migrator предоставляет одинаковый API для
 В проекте ThinkingHome.Migrator уже реализованы провайдеры для MS SQL Server, PostgreSQL, MySQL, SQLite. Вы можете [реализовать свой провайдер](development.md) для любой нужной СУБД.
 
 ## Далее
-[Начало работы](getting-started.md) 
+
+[Начало работы](getting-started.md). 

@@ -9,7 +9,7 @@
 
 1. [Обзор](docs/overview.md)
 1. [Начало работы](docs/getting-started.md)
-1. [Описание классов миграций](docs/writing-migrations.md)
+1. [Создание миграций](docs/writing-migrations.md)
 1. [Выполнение миграций](docs/how-to-run.md)
 1. [Использование с различными СУБД](docs/dialects.md)
 1. [Разработка](docs/development.md)

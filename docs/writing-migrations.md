@@ -258,13 +258,19 @@ void RemoveConstraint(SchemaQualifiedObjectName table, string name);
 
 ### Индексы
 
+Добавить индекс:
+
 ```c#
 void AddIndex(string name, bool unique, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
+Проверить, существует ли индекс с заданным именем:
+
 ```c#
 bool IndexExists(string indexName, SchemaQualifiedObjectName tableName);
 ```
+
+Удалить индекс:
 
 ```c#
 void RemoveIndex(string indexName, SchemaQualifiedObjectName tableName);
@@ -273,21 +279,19 @@ void RemoveIndex(string indexName, SchemaQualifiedObjectName tableName);
 
 ### Операции с данными
 
+Вставить запись в таблицу:
+
 ```c#
 int Insert(SchemaQualifiedObjectName table, string[] columns, string[] values);
 ```
 
-```c#
-int Insert(SchemaQualifiedObjectName table, object row);
-```
+Изменить значения в строках таблицы по условию:
 
 ```c#
 int Update(SchemaQualifiedObjectName table, string[] columns, string[] values, string whereSql = null);
 ```
 
-```c#
-int Update(SchemaQualifiedObjectName table, object row, string whereSql = null);
-```
+Удалить записи из таблицы по условию:
 
 ```c#
 int Delete(SchemaQualifiedObjectName table, string whereSql = null);
@@ -296,19 +300,29 @@ int Delete(SchemaQualifiedObjectName table, string whereSql = null);
 
 ### Произвольные SQL запросы
 
+Выполнить произвольный SQL запрос, заданный строкой:
+
 ```c#
 int ExecuteNonQuery(string sql);
 ```
+
+Прочитать данные с помощью произвольного SQL запроса:
 
 ```c#
 IDataReader ExecuteReader(string sql);
 ```
 
+Получить отдельное значение с помощью произвольного SQL запроса:
+
 ```c#
 object ExecuteScalar(string sql);
 ```
 
+Выполнить произвольный SQL запрос, содержащийся в текстовом файле в ресурсах `.dll`
+
 ```c#
 void ExecuteFromResource(Assembly assembly, string path);
 ```
+## Далее
 
+Узнайте о способах выполнения миграций в разделе [Как запустить](how-to-run.md).
