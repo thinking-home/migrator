@@ -62,10 +62,9 @@ namespace ThinkingHome.Migrator
         /// </summary>
         public Migrator(ITransformationProvider provider, Assembly asm, ILogger logger = null)
         {
-            if (provider == null) throw new ArgumentNullException(nameof(provider));
             if (asm == null) throw new ArgumentNullException(nameof(asm));
 
-            Provider = provider;
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Logger = new MigrationLogger(logger);
 
             migrationAssembly = new MigrationAssembly(asm);
