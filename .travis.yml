@@ -14,4 +14,4 @@ before_script:
   - docker exec mssql /init-mssql.sh
   - dotnet restore
 script:
-  - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.0
+  - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.1
