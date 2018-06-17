@@ -3,7 +3,7 @@
 namespace ThinkingHome.Migrator.Framework
 {
     /// <summary>
-    /// Тип столбца таблицы
+    /// Database table column type
     /// </summary>
     public class ColumnType
     {
@@ -24,26 +24,15 @@ namespace ThinkingHome.Migrator.Framework
             Scale = scale;
         }
 
-        /// <summary>
-        /// Тип данных
-        /// </summary>
         public DbType DataType { get; set; }
 
-        /// <summary>
-        /// Размер
-        /// </summary>
         public int? Length { get; set; }
 
-        /// <summary>
-        /// Точность
-        /// </summary>
         public int? Scale { get; set; }
 
         /// <summary>
-        /// Приведение типов DbType -> ColumnType
+        /// Implicit type conversion DbType to ColumnType
         /// </summary>
-        /// <param name="type">Тип колонки, заданный в виде DbType</param>
-        /// <returns>Объект ColumnType, соответствующий заданному типу DbType</returns>
         public static implicit operator ColumnType(DbType type)
         {
             return new ColumnType(type);

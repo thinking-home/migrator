@@ -151,10 +151,10 @@ namespace ThinkingHome.Migrator.Tests
         public virtual void CanUseTransactions()
         {
             provider.BeginTransaction();
-            provider.AddTable("transtest", new Column("id", DbType.Int32));
+            provider.AddTable("transtest2", new Column("id", DbType.Int32));
             provider.Commit();
-            Assert.True(provider.TableExists("transtest"));
-            provider.RemoveTable("transtest");
+            Assert.True(provider.TableExists("transtest2"));
+            provider.RemoveTable("transtest2");
         }
 
         [Fact]
