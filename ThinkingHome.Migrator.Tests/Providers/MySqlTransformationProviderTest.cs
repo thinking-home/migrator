@@ -34,32 +34,38 @@ namespace ThinkingHome.Migrator.Tests.Providers
 
         #region override tests
 
+        [Fact]
         public override void CanVerifyThatCheckConstraintIsExist()
         {
             // todo: пройтись по всем тестам с NotSupportedException и проверить необходимость выдачи исключения
             Assert.Throws<NotSupportedException>((Action) base.CanVerifyThatCheckConstraintIsExist);
         }
 
+        [Fact]
         public override void CanAddCheckConstraint()
         {
             Assert.Throws<NotSupportedException>((Action) base.CanAddCheckConstraint);
         }
 
+        [Fact]
         public override void CanRenameColumn()
         {
             Assert.Throws<NotSupportedException>((Action) base.CanRenameColumn);
         }
 
+        [Fact]
         public override void CanAddForeignKeyWithDeleteSetDefault()
         {
             Assert.Throws<NotSupportedException>((Action) base.CanAddForeignKeyWithDeleteSetDefault);
         }
 
+        [Fact]
         public override void CanAddForeignKeyWithUpdateSetDefault()
         {
             Assert.Throws<NotSupportedException>((Action) base.CanAddForeignKeyWithUpdateSetDefault);
         }
 
+        [Fact]
         public override void CanRollbackTransactions()
         {
             var primaryTable = GetRandomTableName("transtest3");
@@ -99,6 +105,7 @@ namespace ThinkingHome.Migrator.Tests.Providers
             provider.RemoveTable(tableName);
         }
 
+        [Fact]
         public override void CanCheckThatPrimaryKeyIsExist()
         {
             string tableName = GetRandomName("CheckThatPrimaryKeyIsExist");

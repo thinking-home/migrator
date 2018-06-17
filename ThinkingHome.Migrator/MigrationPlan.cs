@@ -26,8 +26,7 @@ namespace ThinkingHome.Migrator
         /// <param name="startVersion">Начальная версия БД</param>
         public MigrationPlan(IEnumerable<long> versions, long startVersion)
         {
-            if (versions == null) throw new ArgumentNullException(nameof(versions));
-            this.versions = versions;
+            this.versions = versions ?? throw new ArgumentNullException(nameof(versions));
             StartVersion = startVersion;
         }
 
