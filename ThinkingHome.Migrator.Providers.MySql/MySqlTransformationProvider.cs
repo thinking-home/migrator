@@ -56,7 +56,7 @@ namespace ThinkingHome.Migrator.Providers.MySql
 
         #region custom sql
 
-        public override bool IdentityNeedsType => false;
+        protected override bool IdentityNeedsType => false;
 
         protected override string NamesQuoteTemplate => "`{0}`";
 

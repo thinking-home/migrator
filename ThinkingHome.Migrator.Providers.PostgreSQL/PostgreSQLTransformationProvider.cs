@@ -44,7 +44,7 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
 
         }
 
-        public override bool IdentityNeedsType => false;
+        protected override bool IdentityNeedsType => false;
 
         public override string BatchSeparator => null;
 

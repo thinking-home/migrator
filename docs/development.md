@@ -17,7 +17,7 @@ dotnet build
 
 ## Как запустить тесты
 
-Базовая логика мигратора и логика провайдеров трансформации покрыты интеграционными тестами. Для запуска тестов нужен доступ к работающим экземплярам СУБД. Текущие настройки тестов рассчитаны на запуск СУБД в Docker контейнерах.
+Базовая логика мигратора и логика провайдеров трансформации покрыты интеграционными тестами. Для запуска тестов нужен доступ к работающим экземплярам СУБД. Текущие настройки тестов рассчитаны на запуск СУБД в [Docker контейнерах](https://guides.hexlet.io/docker/).
 
 ### Запуск MS SQL Server для тестов
 
@@ -62,3 +62,35 @@ dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.1
 ```
 
 ## Собственные провайдеры трансформации
+
+Если вам нужно использовать мигратор с СУБД, для которой нет готового провайдера, вы можете написать его самостоятельно — это несложно.
+
+Подключите из NuGet в свой проект библиотеки [ThinkingHome.Migrator](https://www.nuget.org/packages/ThinkingHome.Migrator) и [Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/).
+Также подключите библиотеку, предоставляющую класс, который реализует интерфейс `System.Data.IDbConnection` для нужной вам СУБД.
+
+### Реализация провайдера
+
+Провайдер СУБД — это класс, унаследованнй от `ThinkingHome.Migrator.TransformationProvider<TConnection>`, где `TConnection` — это класс, реализующий интерфейс `System.Data.IDbConnection` для нужной вам СУБД.  
+
+```c#
+public class MyTransformationProvider : TransformationProvider<MyConnection>
+{
+    public MyTransformationProvider(MyConnection connection, ILogger logger)
+        : base(connection, logger)
+    {
+        // ...
+    }
+    
+    // ...
+}
+```
+
+#### Типы данных
+
+#### Генерация SQL запросов
+
+### Фабрика провайдеров
+
+### Как запустить
+
+### Тесты

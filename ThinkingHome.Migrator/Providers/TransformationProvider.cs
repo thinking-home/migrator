@@ -60,9 +60,9 @@ namespace ThinkingHome.Migrator.Providers
 
         #region Особенности СУБД
 
-        public virtual bool IdentityNeedsType => true;
+        protected virtual bool IdentityNeedsType => true;
 
-        public virtual bool NeedsNotNullForIdentity => true;
+        protected virtual bool NeedsNotNullForIdentity => true;
 
         public bool TypeIsSupported(DbType type)
         {
@@ -85,7 +85,7 @@ namespace ThinkingHome.Migrator.Providers
             return FormatSql("DROP TABLE {0:NAME}", table);
         }
 
-        public virtual string GetSqlColumnDef(Column column, bool compoundPrimaryKey)
+        protected virtual string GetSqlColumnDef(Column column, bool compoundPrimaryKey)
         {
             var sqlBuilder = new ColumnSqlBuilder(column, typeMap, propertyMap, GetQuotedName);
 
@@ -113,7 +113,7 @@ namespace ThinkingHome.Migrator.Providers
 
         protected virtual string GetSqlDefaultValue(object defaultValue)
         {
-            return string.Format("DEFAULT {0}", defaultValue);
+            return $"DEFAULT {defaultValue}";
         }
 
         protected virtual string GetSqlAddColumn(SchemaQualifiedObjectName table, string columnSql)
@@ -193,13 +193,13 @@ namespace ThinkingHome.Migrator.Providers
                 "ALTER TABLE {0:NAME} ADD CONSTRAINT {1:NAME} PRIMARY KEY ({2:COLS})", table, name, columns);
         }
 
-        protected string GetSqlAddUniqueConstraint(string name, SchemaQualifiedObjectName table, string[] columns)
+        protected virtual string GetSqlAddUniqueConstraint(string name, SchemaQualifiedObjectName table, string[] columns)
         {
             return FormatSql(
                 "ALTER TABLE {0:NAME} ADD CONSTRAINT {1:NAME} UNIQUE({2:COLS})", table, name, columns);
         }
 
-        protected string GetSqlAddCheckConstraint(string name, SchemaQualifiedObjectName table, string checkSql)
+        protected virtual string GetSqlAddCheckConstraint(string name, SchemaQualifiedObjectName table, string checkSql)
         {
             return FormatSql(
                 "ALTER TABLE {0:NAME} ADD CONSTRAINT {1:NAME} CHECK ({2}) ", table, name, checkSql);
