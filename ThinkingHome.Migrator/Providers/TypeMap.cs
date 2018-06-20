@@ -136,28 +136,13 @@ namespace ThinkingHome.Migrator.Providers
         /// конкретного значения DbType, указанного в "миграциях".
         /// <para><c>$l</c> - будет заменено на конкретное значение длины</para>
         /// <para><c>$s</c> - будет заменено на конкретное значение, показывающее
-        /// количество знаков после запятой для вещественных чисел</para>м
-        /// </summary>
-        /// <param name="typecode">The typecode</param>
-        /// <param name="length">Maximum length of database type</param>
-        /// <param name="name">The database type name</param>
-        public void Put(DbType typecode, int? length, string name)
-        {
-            Put(typecode, length, name, null);
-        }
-
-        /// <summary>
-        /// Регистрирует название типа БД, которое будет использовано для
-        /// конкретного значения DbType, указанного в "миграциях".
-        /// <para><c>$l</c> - будет заменено на конкретное значение длины</para>
-        /// <para><c>$s</c> - будет заменено на конкретное значение, показывающее
         /// количество знаков после запятой для вещественных чисел</para>
         /// </summary>
         /// <param name="typecode">Тип</param>
         /// <param name="length">Максимальная длина</param>
         /// <param name="name">Название типа БД</param>
         /// <param name="defaultScale">Значение по-умолчанию: количество знаков после запятой для вещественных чисел</param>
-        public void Put(DbType typecode, int? length, string name, int? defaultScale)
+        public void Put(DbType typecode, int? length, string name, int? defaultScale = null)
         {
             if (length.HasValue)
             {
