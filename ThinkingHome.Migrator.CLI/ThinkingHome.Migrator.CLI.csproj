@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Package.xml" />
   <PropertyGroup>
+    <Description>.NET Core database migration tool</Description>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>migrate-database</ToolCommandName>

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Package.xml" />
   <PropertyGroup>
+    <Description>ThinkingHome.Migrator provider for PostgreSQL</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>

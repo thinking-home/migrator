@@ -11,7 +11,7 @@
 Самый простой способ выполнить миграции — использовать консольное приложение `migrate-database`. Вы можете установить его из NuGet пакета [ThinkingHome.Migrator.CLI](https://www.nuget.org/packages/ThinkingHome.Migrator.CLI) как глобальную утилиту .NET Core.
 
 ```bash
-dotnet tool install -g thinkinghome.migrator.cli --version 3.0.0-alpha9
+dotnet tool install -g thinkinghome.migrator.cli
 ```
 
 При запуске нужно указать три обязательных параметра: тип СУБД, строку подключения и путь к сборке (файлу `.dll`) с миграциями: 

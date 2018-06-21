@@ -3,7 +3,7 @@
 Чтобы писать миграции, подключите в свой проект пакет [ThinkingHome.Migrator.Framework](https://www.nuget.org/packages/ThinkingHome.Migrator.Framework) из NuGet.
 
 ```bash
-dotnet add package ThinkingHome.Migrator.Framework --version 3.0.0-alpha9
+dotnet add package ThinkingHome.Migrator.Framework
 ```  
 
 ## Пример миграции
@@ -42,7 +42,7 @@ public class MyTestMigration : Migration
 Установите утилиту `migrate-database` из NuGet пакета [ThinkingHome.Migrator.CLI](https://www.nuget.org/packages/ThinkingHome.Migrator.CLI).
 
 ```bash
-dotnet tool install -g thinkinghome.migrator.cli --version 3.0.0-alpha9
+dotnet tool install -g thinkinghome.migrator.cli
 ```
 
 Запустите `migrate-database`, указав нужный тип СУБД, строку подключения и путь к сборке с миграциями.
