@@ -87,6 +87,34 @@ public class MyTransformationProvider : TransformationProvider<MyConnection>
 
 Большинство отличий СУБД обычно связаны с типами данных и синтаксисом SQL запросов.
 
+#### Фабрика провайдеров
+
+Чтобы выполнять миграции с помощью своего провайдера вам также потребуется *фабрика провайдеров* - общая точка входа для работы с конкретной СУБД. Фабрика — это класс, который создает во время работы мигратора экземпляры вашего провайдера и открывает подключения к БД.
+
+Класс фабрики провайдеров должен быть унаследован от `ProviderFactory<TProvider, TConnection>` и должен реализовывать его абстрактные методы `CreateProviderInternal` и `CreateConnectionInternal`.
+
+```c#
+public class MyProviderFactory :
+    ProviderFactory<MyTransformationProvider, MyConnection>
+{
+    protected override MyTransformationProvider CreateProviderInternal(MyConnection connection, ILogger logger)
+    {
+        return new MyTransformationProvider(connection, logger);
+    }
+
+    protected override MyConnection CreateConnectionInternal(string connectionString)
+    {
+        return new MyConnection(connectionString);
+    }
+}
+``` 
+
+После этого вы можете выполнять миграции с помощью своего провайдера, указав вместо названия СУБД класс своей **фабрики провайдеров** (полное название класса с названием сборки):
+
+```bash
+migrate-database "MyAssembly.MyNamespace.MyTransformationProvider, MyAssembly" "my-connection-string" /path/to/migrations.dll 
+```
+
 #### Типы данных
 
 В разных СУБД одни и те же типы данных обозначаются разными ключевыми словами. Например, для 32-разрядного целого числа в PostgreSQL используется тип `int4`, а в MySQL — тип `INTEGER`. 
@@ -152,8 +180,19 @@ Database.AddColumn("my_table",
 
 #### Генерация SQL запросов
 
-### Фабрика провайдеров
+Синтаксис SQL запросов в разных СУБД иногда совпадает и иногда отличается. В базовом классе `ThinkingHome.Migrator.TransformationProvider<T>` уже реализована генерация запросов для всех методов API. Логика формирования SQL вынесена в виртуальные методы. Если для вашей СУБД необходимо формировать SQL запросы по другому, переопределите методы базового класса.  
 
-### Как запустить
+Посмотрите в качестве примера [код провайдера](https://github.com/thinking-home/migrator/blob/master/ThinkingHome.Migrator.Providers.SqlServer/SqlServerTransformationProvider.cs) для MS SQL Server.
 
 ### Тесты
+
+API провайдеров трансформации покрыт интеграционными тестами. Тесты — удобный инструмент для проверки работы собственного провайдера.
+
+- опишите класс своего провайдера, унаследованный от `ThinkingHome.Migrator.TransformationProvider<T>`
+- опишите класс для тестов, унаследованный от базового класса [TransformationProviderTestBase](https://github.com/thinking-home/migrator/blob/master/ThinkingHome.Migrator.Tests/TransformationProviderTestBase.cs)
+- переопределите у класса с тестами виртуальные методы и свойства:
+  - метод `CreateProvider` — создайте здесь экземпляр собственного провайдера
+  - метод `GetSchemaForCompare` — должен возвращать название схемы по умолчанию для СУБД
+  - свойство `BatchSql` — должно возвращать текст запроса, состоящего из нескольких простых запросов, разделенных нужным разделителем (например, `GO` для MS SQL Server)
+  - свойство `ResourceSql` — должно возвращать путь к тестовому файлу `.sql` в ресурсах текущей dll (он будет использоваться для проверки выполнения запросов из ресурсов dll)
+- запустите тесты, посмотрите, что упало и почините его (обычно для этого нужно переопределить генерацию запроса в провайдере, но иногда нужно переопределить тест и поменять его логику)
