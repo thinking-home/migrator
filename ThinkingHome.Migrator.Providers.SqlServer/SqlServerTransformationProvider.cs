@@ -30,6 +30,7 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
             typeMap.Put(DbType.Currency, "MONEY");
             typeMap.Put(DbType.Date, "DATE");
             typeMap.Put(DbType.DateTime, "DATETIME");
+            typeMap.Put(DbType.DateTime2, "DATETIME2");
             typeMap.Put(DbType.Decimal, "DECIMAL");
             typeMap.Put(DbType.Decimal, 38, "DECIMAL($l, $s)", 2);
             typeMap.Put(DbType.Double, "DOUBLE PRECISION"); //synonym for FLOAT(53)
