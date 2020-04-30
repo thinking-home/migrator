@@ -14,16 +14,20 @@ namespace ThinkingHome.Migrator.CLI
 
         private static CommandOption versionOption, timeoutOption, verboseOption, listOption;
 
+        private static ILoggerFactory CreateLoggerFactory()
+        {
+            var logLevel = verboseOption.HasValue()
+                ? LogLevel.Trace
+                : LogLevel.Information;
+
+            return LoggerFactory.Create(builder =>
+                builder.AddFilter("Default", logLevel).AddConsole());
+        }
+
         private static int Invoke(string provider, string connectionString, string assemblyPath)
         {
-            using (var loggerFactory = new LoggerFactory())
+            using (var loggerFactory = CreateLoggerFactory())
             {
-                var logLevel = verboseOption.HasValue()
-                    ? LogLevel.Trace
-                    : LogLevel.Information;
-
-                loggerFactory.AddConsole(logLevel);
-
                 var logger = loggerFactory.CreateLogger("migrate-database");
 
                 var asm = Assembly.LoadFrom(Path.GetFullPath(assemblyPath));

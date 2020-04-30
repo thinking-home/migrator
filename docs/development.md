@@ -2,7 +2,7 @@
 
 ## Как собрать проект
 
-Для сборки проекта вам нужно установить [.NET Core 2.1 SDK](https://www.microsoft.com/net/download).
+Для сборки проекта вам нужно установить [.NET Core 3.1 SDK](https://www.microsoft.com/net/download).
 
 ```bash
 git clone https://github.com/thinking-home/migrator.git
@@ -58,7 +58,7 @@ docker exec postgres /init-postgres.sh
 После запуска всех нужных СУБД вы можете запустить тесты командой `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.1
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp3.1
 ```
 
 ## Собственные провайдеры трансформации
@@ -70,7 +70,7 @@ dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp2.1
 
 ### Реализация провайдера
 
-Провайдер СУБД — это класс, унаследованнй от `ThinkingHome.Migrator.TransformationProvider<TConnection>`, где `TConnection` — это класс, реализующий интерфейс `System.Data.IDbConnection` для нужной вам СУБД.  
+Провайдер СУБД — это класс, унаследованнй от `ThinkingHome.Migrator.TransformationProvider<TConnection>`, где `TConnection` — это класс, реализующий интерфейс `System.Data.IDbConnection` для нужной вам СУБД.
 
 ```c#
 public class MyTransformationProvider : TransformationProvider<MyConnection>
@@ -80,7 +80,7 @@ public class MyTransformationProvider : TransformationProvider<MyConnection>
     {
         // ...
     }
-    
+
     // ...
 }
 ```
@@ -107,17 +107,17 @@ public class MyProviderFactory :
         return new MyConnection(connectionString);
     }
 }
-``` 
+```
 
 После этого вы можете выполнять миграции с помощью своего провайдера, указав вместо названия СУБД класс своей **фабрики провайдеров** (полное название класса с названием сборки):
 
 ```bash
-migrate-database "MyAssembly.MyNamespace.MyTransformationProvider, MyAssembly" "my-connection-string" /path/to/migrations.dll 
+migrate-database "MyAssembly.MyNamespace.MyTransformationProvider, MyAssembly" "my-connection-string" /path/to/migrations.dll
 ```
 
 #### Типы данных
 
-В разных СУБД одни и те же типы данных обозначаются разными ключевыми словами. Например, для 32-разрядного целого числа в PostgreSQL используется тип `int4`, а в MySQL — тип `INTEGER`. 
+В разных СУБД одни и те же типы данных обозначаются разными ключевыми словами. Например, для 32-разрядного целого числа в PostgreSQL используется тип `int4`, а в MySQL — тип `INTEGER`.
 
 API мигратора использует для работы с типами колонок перечисление `System.Data.DbType` и каждый провайдер задает собственные правила сопоставления значения `DbType` с типами СУБД.
 
@@ -140,9 +140,9 @@ public class MyTransformationProvider : TransformationProvider<MyConnection>
 API мигратора позволяет указывать размер для значений столбцов. Например, вы можете создать столбец для хранения строк, длина которых не превышает 80 символов:
 
 ```c#
-Database.AddColumn("my_table", 
+Database.AddColumn("my_table",
     new Column("test_string_column", DbType.String.WithSize(80)));
-``` 
+```
 
 Вы можете задать разные типы СУБД, в зависимости от указанного размера. Вместо заглушки `$l` (length) будет подставлен нужный размер.
 
@@ -150,14 +150,14 @@ Database.AddColumn("my_table",
 // если размер не указан, используем тип NVARCHAR(255)
 typeMap.Put(DbType.String, "NVARCHAR(255)");
 
-// если указан размер менее 4 тыс символов, то используем тип "NVARCHAR(<размер>) 
+// если указан размер менее 4 тыс символов, то используем тип "NVARCHAR(<размер>)
 typeMap.Put(DbType.String, 4000, "NVARCHAR($l)");
 
 // если указан размер более 4 тыс символов, то используем NVARCHAR(MAX)
 typeMap.Put(DbType.String, int.MaxValue, "NVARCHAR(MAX)");
 ```
 
-Вы можете использовать заглушку `$s` (scale), которая будет заменена на указанное значение точности для типа. Также вы можете указать при вызове метода `Put` последний необязательный параметр — значение точности по умолчанию. 
+Вы можете использовать заглушку `$s` (scale), которая будет заменена на указанное значение точности для типа. Также вы можете указать при вызове метода `Put` последний необязательный параметр — значение точности по умолчанию.
 
 ```c#
 typeMap.Put(DbType.Decimal, "DECIMAL");
@@ -166,21 +166,21 @@ typeMap.Put(DbType.Decimal, 38, "DECIMAL($l, $s)", 2);
 // ...
 
 // DECIMAL
-Database.AddColumn("my_table", 
+Database.AddColumn("my_table",
     new Column("test_decimal_column", DbType.Decimal));
 
 // DECIMAL(10, 4)
-Database.AddColumn("my_table", 
+Database.AddColumn("my_table",
     new Column("test_decimal_column", DbType.Decimal.WithSize(10, 4)));
 
 // DECIMAL(10, 2)
-Database.AddColumn("my_table", 
+Database.AddColumn("my_table",
     new Column("test_decimal_column", DbType.Decimal.WithSize(10)));
 ```
 
 #### Генерация SQL запросов
 
-Синтаксис SQL запросов в разных СУБД иногда совпадает и иногда отличается. В базовом классе `ThinkingHome.Migrator.TransformationProvider<T>` уже реализована генерация запросов для всех методов API. Логика формирования SQL вынесена в виртуальные методы. Если для вашей СУБД необходимо формировать SQL запросы по другому, переопределите методы базового класса.  
+Синтаксис SQL запросов в разных СУБД иногда совпадает и иногда отличается. В базовом классе `ThinkingHome.Migrator.TransformationProvider<T>` уже реализована генерация запросов для всех методов API. Логика формирования SQL вынесена в виртуальные методы. Если для вашей СУБД необходимо формировать SQL запросы по другому, переопределите методы базового класса.
 
 Посмотрите в качестве примера [код провайдера](https://github.com/thinking-home/migrator/blob/master/ThinkingHome.Migrator.Providers.SqlServer/SqlServerTransformationProvider.cs) для MS SQL Server.
 
