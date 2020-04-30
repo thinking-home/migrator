@@ -53,6 +53,16 @@ docker run --name postgres -d -p 5432:5432\
 docker exec postgres /init-postgres.sh
 ```
 
+### Запуск Oracle для тестов
+
+```sh
+docker run --name orcl -d -p 1521:1521\
+    -v $(pwd)/bash/init-oracle.sh:/init-oracle.sh\
+    wnameless/oracle-xe-11g-r2
+
+docker exec orcl /init-oracle.sh
+```
+
 ### Запуск тестов
 
 После запуска всех нужных СУБД вы можете запустить тесты командой `dotnet test`:
