@@ -4,7 +4,7 @@ export PATH=/u01/app/oracle/product/11.2.0/xe/bin:/usr/local/sbin:/usr/local/bin
 export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
 export ORACLE_SID=XE
 
-cd /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/
+cd /u01/app/oracle/product/11.2.0/xe/bin/
 chmod 6751 oracle
 
 sqlplus /nolog <<EOF
