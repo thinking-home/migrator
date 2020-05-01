@@ -9,6 +9,7 @@ chmod 6751 oracle
 
 sqlplus /nolog <<EOF
 connect SYS/oracle AS SYSDBA;
+startup
 
 create user TEST IDENTIFIED BY 123;
 grant all privileges to TEST;
