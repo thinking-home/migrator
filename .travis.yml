@@ -11,6 +11,8 @@ before_script:
   - ./bash/init-postgres.sh
   - docker run --name mssql -v $(pwd)/bash/init-mssql.sh:/init-mssql.sh -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=x987(!)654' -p 1433:1433 -d microsoft/mssql-server-linux
   - docker exec mssql /init-mssql.sh
+  - docker run --name orcl -v $(pwd)/bash/init-oracle.sh:/init-oracle.sh -p 1521:1521 -d wnameless/oracle-xe-11g-r2
+  - docker exec orcl /init-oracle.sh
   - dotnet restore
 script:
   - dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp3.1
