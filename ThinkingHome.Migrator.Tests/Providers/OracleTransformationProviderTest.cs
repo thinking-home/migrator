@@ -24,12 +24,8 @@ namespace ThinkingHome.Migrator.Tests.Providers
                 sb.AppendLine("/");
                 sb.AppendLine("insert into \"BatchSqlTest\" (\"Id\", \"TestId\") values (22, 222)");
                 sb.AppendLine("/");
+                sb.AppendLine("/");
                 sb.AppendLine("insert into \"BatchSqlTest\" (\"Id\", \"TestId\") values (33, 333)");
-                sb.AppendLine("/");
-                sb.AppendLine("insert into \"BatchSqlTest\" (\"Id\", \"TestId\") values (44, 444)");
-                sb.AppendLine("/");
-                sb.AppendLine("/");
-                sb.AppendLine("insert into \"BatchSqlTest\" (\"Id\", \"TestId\") values (55, 555)");
 
                 return sb.ToString();
             }
