@@ -150,20 +150,31 @@ namespace ThinkingHome.Migrator.Tests
         [Fact]
         public virtual void CanUseTransactions()
         {
+            var tableName = GetRandomTableName("transtest-commit");
+            provider.AddTable(tableName, new Column("id", DbType.Int32));
             provider.BeginTransaction();
-            provider.AddTable("transtest2", new Column("id", DbType.Int32));
+            provider.Insert(tableName, new[] {"id"}, new[] {"444"});
             provider.Commit();
-            Assert.True(provider.TableExists("transtest2"));
-            provider.RemoveTable("transtest2");
+
+            var sql = provider.FormatSql("select * from {0:NAME}", tableName);
+            using var reader = provider.ExecuteReader(sql);
+            Assert.True(reader.Read());
+            Assert2.Equal(444, reader["id"]);
+            Assert.False(reader.Read());
         }
 
         [Fact]
         public virtual void CanRollbackTransactions()
         {
+            var tableName = GetRandomTableName("transtest-rollback");
+            provider.AddTable(tableName, new Column("id", DbType.Int32));
             provider.BeginTransaction();
-            provider.AddTable("transtest", new Column("id", DbType.Int32));
+            provider.Insert(tableName, new[] {"id"}, new[] {"123"});
             provider.Rollback();
-            Assert.False(provider.TableExists("transtest"));
+
+            var sql = provider.FormatSql("select * from {0:NAME}", tableName);
+            using var reader = provider.ExecuteReader(sql);
+            Assert.False(reader.Read());
         }
 
         #endregion

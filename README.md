@@ -2,7 +2,7 @@
 
 **ThinkingHome.Migrator** — инструмент для версионной миграции структуры БД для платформы [.NET Core](https://www.microsoft.com/net/learn/get-started). Он помогает управлять изменениями структуры БД и ведет контроль версий БД.
 
-**Поддерживаемые СУБД:** MS SQL Server, PostgreSQL, MySQL, SQLite.
+**Поддерживаемые СУБД:** MS SQL Server, PostgreSQL, Oracle, MySQL, SQLite.
 
 Узнайте подробнее:
 

@@ -35,7 +35,7 @@ public override void Apply()
 
 ThinkingHome.Migrator предоставляет одинаковый API для управления разными СУБД. При запуске миграций нужно указать название *провайдера трансформации*, который будет генерировать SQL запросы для нужной СУБД. 
 
-В проекте ThinkingHome.Migrator уже реализованы провайдеры для MS SQL Server, PostgreSQL, MySQL, SQLite. Вы можете [реализовать свой провайдер](development.md) для любой нужной СУБД.
+В проекте ThinkingHome.Migrator уже реализованы провайдеры для MS SQL Server, PostgreSQL, Oracle, MySQL, SQLite. Вы можете [реализовать свой провайдер](development.md) для любой нужной СУБД.
 
 ## Далее
 

@@ -8,12 +8,13 @@
 
 ## Готовые провайдеры
 
-Есть уже готовые провайдеры для MS SQL Server, PostgreSQL, MySQL и SQLite.
+Есть уже готовые провайдеры для MS SQL Server, PostgreSQL, Oracle, MySQL и SQLite.
 
 | **СУБД** | **Короткое имя провайдера** | **NuGet пакет** |
 |:-------------|:------------------------|:----------------|
 | MS SQL Server |mssql |[ThinkingHome.Migrator.Providers.SqlServer](https://www.nuget.org/packages/ThinkingHome.Migrator.Providers.SqlServer)|
 | PostgreSQL |postgres |[ThinkingHome.Migrator.Providers.PostgreSQL](https://www.nuget.org/packages/ThinkingHome.Migrator.Providers.PostgreSQL)|
+| Oracle |oracle |[ThinkingHome.Migrator.Providers.Oracle](https://www.nuget.org/packages/ThinkingHome.Migrator.Providers.Oracle)|
 | MySQL | mysql |[ThinkingHome.Migrator.Providers.MySql](https://www.nuget.org/packages/ThinkingHome.Migrator.Providers.MySql)|
 | SQLite |sqlite |[ThinkingHome.Migrator.Providers.SQLite](https://www.nuget.org/packages/ThinkingHome.Migrator.Providers.SQLite)|
 
