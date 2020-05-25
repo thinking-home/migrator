@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework.Interfaces;
-using ThinkingHome.Migrator.Providers.PostgreSQL;
+using ThinkingHome.Migrator.Providers.Oracle;
 using Xunit;
 
 namespace ThinkingHome.Migrator.Tests.Providers

@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ThinkingHome.Migrator.Providers.MySql\ThinkingHome.Migrator.Providers.MySql.csproj" />
     <ProjectReference Include="..\ThinkingHome.Migrator.Providers.PostgreSQL\ThinkingHome.Migrator.Providers.PostgreSQL.csproj" />
+    <ProjectReference Include="..\ThinkingHome.Migrator.Providers.Oracle\ThinkingHome.Migrator.Providers.Oracle.csproj" />
     <ProjectReference Include="..\ThinkingHome.Migrator.Providers.SQLite\ThinkingHome.Migrator.Providers.SQLite.csproj" />
     <ProjectReference Include="..\ThinkingHome.Migrator.Providers.SqlServer\ThinkingHome.Migrator.Providers.SqlServer.csproj" />
     <ProjectReference Include="..\ThinkingHome.Migrator\ThinkingHome.Migrator.csproj" />

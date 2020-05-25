@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
-using ThinkingHome.Migrator.Providers.Oracle;
 
-namespace ThinkingHome.Migrator.Providers.PostgreSQL
+namespace ThinkingHome.Migrator.Providers.Oracle
 {
     public class OracleProviderFactory :
         ProviderFactory<OracleTransformationProvider,OracleConnection>

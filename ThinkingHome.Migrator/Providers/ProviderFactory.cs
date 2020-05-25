@@ -46,6 +46,7 @@ namespace ThinkingHome.Migrator.Providers
         {
             { "postgres", "ThinkingHome.Migrator.Providers.PostgreSQL.PostgreSQLProviderFactory, ThinkingHome.Migrator.Providers.PostgreSQL" },
             { "sqlserver", "ThinkingHome.Migrator.Providers.SqlServer.SqlServerProviderFactory, ThinkingHome.Migrator.Providers.SqlServer" },
+            { "oracle", "ThinkingHome.Migrator.Providers.Oracle.OracleProviderFactory, ThinkingHome.Migrator.Providers.Oracle" },
             { "mysql", "ThinkingHome.Migrator.Providers.MySql.MySqlProviderFactory, ThinkingHome.Migrator.Providers.MySql" },
             { "sqlite",   "ThinkingHome.Migrator.Providers.SQLite.SQLiteProviderFactory, ThinkingHome.Migrator.Providers.SQLite" }
         };
