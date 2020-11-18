@@ -2,7 +2,7 @@
 
 ## Как собрать проект
 
-Для сборки проекта вам нужно установить [.NET Core 3.1 SDK](https://www.microsoft.com/net/download).
+Для сборки проекта вам нужно установить [.NET Core 5.0 SDK](https://www.microsoft.com/net/download).
 
 ```bash
 git clone https://github.com/thinking-home/migrator.git
@@ -68,7 +68,7 @@ docker exec orcl /init-oracle.sh
 После запуска всех нужных СУБД вы можете запустить тесты командой `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f netcoreapp3.1
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net5.0
 ```
 
 ## Собственные провайдеры трансформации
