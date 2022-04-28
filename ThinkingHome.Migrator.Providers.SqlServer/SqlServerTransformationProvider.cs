@@ -197,13 +197,13 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
 
             string sql = FormatSql(
                 "SELECT TOP 1 {0:NAME} FROM {1:NAME} " +
-                "WHERE {2:NAME} = object_id('{3:NAME}') " +
-                "AND {4:NAME} = object_id('{5:NAME}') " +
+                "WHERE {2:NAME} = object_id('{3}') " +
+                "AND {4:NAME} = object_id('{5}') " +
                 "AND {6:NAME} IN ('D', 'F', 'PK', 'UQ')" +
                 "UNION ALL " +
                 "SELECT TOP 1 {0:NAME} FROM {7:NAME} " +
-                "WHERE {2:NAME} = OBJECT_ID(N'{3:NAME}') AND " +
-                "{4:NAME} = OBJECT_ID(N'{5:NAME}')",
+                "WHERE {2:NAME} = OBJECT_ID(N'{3}') AND " +
+                "{4:NAME} = OBJECT_ID(N'{5}')",
                 "name", "objects".WithSchema("sys"), "parent_object_id", table,
                 "object_id", fullConstraintName, "type", "check_constraints".WithSchema("sys"));
 
@@ -281,7 +281,7 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
                 "dobj", "object_id", "col", "default_object_id", "type"));
 
             sqlBuilder.Append(FormatSql(
-                "WHERE {0:NAME}.{1:NAME} = object_id(N'{2:NAME}') AND {0:NAME}.{3:NAME} = '{4:NAME}'",
+                "WHERE {0:NAME}.{1:NAME} = object_id(N'{2}') AND {0:NAME}.{3:NAME} = '{4}'",
                 "col", "object_id", table, "name", column));
 
             return sqlBuilder.ToString();
