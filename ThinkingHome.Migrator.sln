@@ -47,6 +47,16 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThinkingHome.Migrator.Providers.Oracle", "ThinkingHome.Migrator.Providers.Oracle\ThinkingHome.Migrator.Providers.Oracle.csproj", "{545A04D5-D350-4BD6-B68E-90E111BF828A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "en", "en", "{5829BA17-89DA-4990-9F13-0150CA6CB9C3}"
+	ProjectSection(SolutionItems) = preProject
+		docs\en\how-to-run.md = docs\en\how-to-run.md
+		docs\en\writing-migrations.md = docs\en\writing-migrations.md
+		docs\en\overview.md = docs\en\overview.md
+		docs\en\dialects.md = docs\en\dialects.md
+		docs\en\development.md = docs\en\development.md
+		docs\en\getting-started.md = docs\en\getting-started.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,5 +102,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5829BA17-89DA-4990-9F13-0150CA6CB9C3} = {874555E3-01E1-4E3F-A559-DC7748A00AD7}
 	EndGlobalSection
 EndGlobal

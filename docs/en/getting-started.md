@@ -55,4 +55,4 @@ migrate-database postgres "host=localhost;port=5432;database=migrations;" /path/
 
 ## Next steps
 
-Learn more about [writing migrations] (writing-migrations.md) and the transformation provider API.
+Learn more about [writing migrations](writing-migrations.md) and the transformation provider API.
