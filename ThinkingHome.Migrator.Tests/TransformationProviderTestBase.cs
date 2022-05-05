@@ -1381,8 +1381,7 @@ namespace ThinkingHome.Migrator.Tests
 
         protected virtual string GetRandomName(string baseName = "")
         {
-            string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
-            return string.Format("{0}{1}", baseName, guid);
+            return $"{baseName}_{Guid.NewGuid():N}";
         }
 
         protected virtual SchemaQualifiedObjectName GetRandomTableName(string baseName = "")

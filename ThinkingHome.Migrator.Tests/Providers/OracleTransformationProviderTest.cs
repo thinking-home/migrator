@@ -64,7 +64,10 @@ namespace ThinkingHome.Migrator.Tests.Providers
 
         protected override string GetRandomName(string baseName = "")
         {
-            return base.GetRandomName(baseName).Substring(0, 27);
+            var shortBaseName = baseName.Substring(0, Math.Min(baseName.Length, 10));
+
+            // oracle does not support identifiers longer than 27 characters
+            return base.GetRandomName(shortBaseName).Substring(0, 27);
         }
     }
 }
