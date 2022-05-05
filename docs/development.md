@@ -26,7 +26,7 @@ docker run --name mssql -d -p 1433:1433\
     -e 'ACCEPT_EULA=Y'\
     -e 'SA_PASSWORD=x987(!)654'\
     -v $(pwd)/bash/init-mssql.sh:/init-mssql.sh\
-    microsoft/mssql-server-linux
+    mcr.microsoft.com/mssql/server
 
 docker exec mssql /init-mssql.sh
 ```
