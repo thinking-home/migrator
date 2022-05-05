@@ -564,6 +564,41 @@ namespace ThinkingHome.Migrator.Tests
             provider.RemoveTable(tableName);
         }
 
+        [Fact]
+        public virtual void CanRemoveColumnWithContrainsts()
+        {
+            SchemaQualifiedObjectName primaryTable = GetRandomTableName("RemoveColumnWithContraints_Primary");
+            SchemaQualifiedObjectName refTable = GetRandomTableName("RemoveColumnWithContraints_Ref");
+            string column = GetRandomName();
+            string foreignKeyName = GetRandomName("FK_TestSimpleKey");
+            string constraintName = GetRandomName("CC_AddCheckConstraint");
+
+            provider.AddTable(primaryTable, 
+                new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey),
+                new Column(column, DbType.String, ColumnProperty.Unique),
+                new Column("RefID", DbType.Int32),
+                new Column("FakeColumn", DbType.String));
+
+            provider.AddTable(refTable,
+                new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey));
+
+            string checkSql = provider.FormatSql("{0:NAME} > 5", "ID");
+            provider.AddCheckConstraint(constraintName, primaryTable, checkSql);
+
+            provider.AddForeignKey(foreignKeyName, primaryTable, "RefID", refTable, "ID");
+
+            provider.RemoveColumn(primaryTable, column);
+            provider.RemoveColumn(primaryTable, "ID");
+            provider.RemoveColumn(primaryTable, "RefID");
+
+            Assert.False(provider.ColumnExists(primaryTable, column));
+            Assert.False(provider.ColumnExists(primaryTable, "ID"));
+            Assert.False(provider.ColumnExists(primaryTable, "RefID"));
+
+            provider.RemoveTable(primaryTable);
+            provider.RemoveTable(refTable);
+        }
+
         #endregion
 
         #region constraints
