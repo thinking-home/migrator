@@ -30,17 +30,17 @@ See the list of available providers in the [Supported DBMS](dialects.md) section
 
 You can also specify additional (optional) parameters:
 
-- **--list** - list available migrations without running them.
+- **--list** — list available migrations without running them.
 - **--version <version>** — target database version. The default value is `-1` (update the database to the latest available version)
 - **--timeout <timeout>** — timeout for executing SQL queries (in seconds).
 - **--verbose** — output the text of executed SQL queries to the console.
-- **-?** | **-h** | **--help** Display help.
+- **-?** | **-h** | **--help** — Display help.
 
 ## API
 
 You can perform migrations from your application through the Migrator API. For example, you can write an application that, when launched, creates the necessary database structure on its own. 
 
-First, include in your project the [ThinkingHome.Migrator](https://www.nuget.org/packages/ThinkingHome.Migrator) package from NuGet and the package with the [transformation provider for the desired DBMS](https://www.nuget.org /packages?q=ThinkingHome.Migrator.Providers). 
+First, include in your project the [ThinkingHome.Migrator](https://www.nuget.org/packages/ThinkingHome.Migrator) package from NuGet and the package with the [transformation provider for the desired DBMS](https://www.nuget.org/packages?q=ThinkingHome.Migrator.Providers). 
 
 After that, create an instance of the `ThinkingHome.Migrator.Migrator` class and call its `Migrate` method, passing the target database version as a parameter.
 
@@ -80,4 +80,4 @@ using (var loggerFactory = new LoggerFactory())
 
 ## Supported DBMS
 
-[Поддерживаемые СУБД](dialects.md).
+[Supported DBMS](dialects.md).
