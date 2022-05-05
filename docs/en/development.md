@@ -26,7 +26,7 @@ docker run --name mssql -d -p 1433:1433\
     -e 'ACCEPT_EULA=Y'\
     -e 'SA_PASSWORD=x987(!)654'\
     -v $(pwd)/bash/init-mssql.sh:/init-mssql.sh\
-    microsoft/mssql-server-linux
+    mcr.microsoft.com/mssql/server
 
 docker exec mssql /init-mssql.sh
 ```
@@ -139,7 +139,7 @@ public class MyTransformationProvider : TransformationProvider<MyConnection>
     public MyTransformationProvider(MyConnection connection, ILogger logger)
         : base(connection, logger)
     {
-        // типы данных
+        // data types
         typeMap.Put(DbType.Int16, "SMALLINT");
         typeMap.Put(DbType.Int32, "INTEGER");
         typeMap.Put(DbType.Int64, "BIGINT");

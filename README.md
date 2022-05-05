@@ -7,8 +7,10 @@
 Узнайте подробнее:
 
 1. [Обзор](docs/overview.md)
-1. [Начало работы](docs/getting-started.md)
-1. [Создание миграций](docs/writing-migrations.md)
-1. [Выполнение миграций](docs/how-to-run.md)
-1. [Поддерживаемые СУБД](docs/dialects.md)
-1. [Разработка](docs/development.md)
+2. [Начало работы](docs/getting-started.md)
+3. [Создание миграций](docs/writing-migrations.md)
+4. [Выполнение миграций](docs/how-to-run.md)
+5. [Поддерживаемые СУБД](docs/dialects.md)
+6. [Разработка](docs/development.md)
+   
+This documentation is also [available in English](./README.en.md).

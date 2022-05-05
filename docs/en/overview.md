@@ -39,4 +39,4 @@ The ThinkingHome.Migrator project has already implemented providers for MS SQL S
 
 ## Next steps
 
-[Getting Started] (getting-started.md).
+[Getting Started](getting-started.md)

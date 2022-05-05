@@ -1,48 +1,48 @@
-# Как запустить
+# How to run migrations
 
-Миграции можно выполнить при помощи консольного приложения `migrate-database` и через API. При запуске нужно указать СУБД, строку подключения и сборку (`.dll`) с миграциями.
+Migrations can be executed using the `migrate-database` console application and via the API. When starting, you need to specify the DBMS, connection string and assembly (`.dll`) with migrations.
 
-При запуске можно опционально указать версию БД. Мигратор по очереди будет выполнять метод `Apply` у миграций в порядке возрастания номера версии, пока не дойдет до заданной. Если целевая версия меньше текущей, то произойдет откат БД с использованием метода `Revert` соответствующих миграций.
+You can optionally specify the target version of the database. The migrator will execute the `Apply` method on migrations one by one in ascending order of the version number until it reaches the given one. If the target version is less than the current version, then the database will be rolled back using the `Revert` method of the corresponding migrations.
 
-Если не указывать номер версии при старте, будет выполнена миграция до последней доступной версии. Также для миграции до последней версии можно указать значение `-1`.
+If you don't specify a version number, it will migrate to the latest available version. You can also specify `-1` to migrate to the latest version.
 
-## Консольное приложение
+## CLI
 
-Самый простой способ выполнить миграции — использовать консольное приложение `migrate-database`. Вы можете установить его из NuGet пакета [ThinkingHome.Migrator.CLI](https://www.nuget.org/packages/ThinkingHome.Migrator.CLI) как глобальную утилиту .NET Core.
+The easiest way to perform migrations is to use the `migrate-database` CLI. You can install it from the NuGet package [ThinkingHome.Migrator.CLI](https://www.nuget.org/packages/ThinkingHome.Migrator.CLI) as a global .NET Core utility.
 
 ```bash
 dotnet tool install -g thinkinghome.migrator.cli
 ```
 
-При запуске нужно указать три обязательных параметра: тип СУБД, строку подключения и путь к сборке (файлу `.dll`) с миграциями: 
+You need to specify three required parameters: DBMS type, connection string and path to the assembly (`.dll` file) with migrations: 
 
 ```bash
 migrate-database <db_provider> <conntection_string> <migrations_dll_path> 
 ```
 
-Например:
+Example:
 
 ```bash
 migrate-database postgres "host=localhost;port=5432;database=migrations;" /path/to/migrations.dll 
 ```
 
-Список доступных провайдеров смотрите в разделе [Поддерживаемые СУБД](dialects.md).
+See the list of available providers in the [Supported DBMS](dialects.md) section.
 
-Вы можете также указать дополнительные (необязательные) параметры:
+You can also specify additional (optional) parameters:
 
-- **--list** — вывести список доступных миграций, не выполняя их.
-- **--version <version>** — целевая версия БД. Значение по умолчанию — `-1` (обновить БД до последней доступной версии)  
-- **--timeout <timeout>** — таймаут на выполнение SQL запросов (в секундах).
-- **--verbose** — выводить в консоль текст выполняемых SQL запросов.
-- **-?** | **-h** | **--help** — вывести справку.
+- **--list** - list available migrations without running them.
+- **--version <version>** — target database version. The default value is `-1` (update the database to the latest available version)
+- **--timeout <timeout>** — timeout for executing SQL queries (in seconds).
+- **--verbose** — output the text of executed SQL queries to the console.
+- **-?** | **-h** | **--help** Display help.
 
 ## API
 
-Вы можете выполнять миграции из своего приложения через API мигратора. Например, вы можете написать приложение, которое при запуске само себе создает нужную структуру БД. 
+You can perform migrations from your application through the Migrator API. For example, you can write an application that, when launched, creates the necessary database structure on its own. 
 
-Сначала подключите в свой проект пакет [ThinkingHome.Migrator](https://www.nuget.org/packages/ThinkingHome.Migrator) из NuGet и пакет с [провайдером трансформации для нужной СУБД](https://www.nuget.org/packages?q=ThinkingHome.Migrator.Providers). 
+First, include in your project the [ThinkingHome.Migrator](https://www.nuget.org/packages/ThinkingHome.Migrator) package from NuGet and the package with the [transformation provider for the desired DBMS](https://www.nuget.org /packages?q=ThinkingHome.Migrator.Providers). 
 
-После этого создайте экземпляр класса `ThinkingHome.Migrator.Migrator` и вызовите его метод `Migrate`, передав в качестве параметра целевую версию БД.
+After that, create an instance of the `ThinkingHome.Migrator.Migrator` class and call its `Migrate` method, passing the target database version as a parameter.
 
 ```c#
 var version = -1;
@@ -56,7 +56,7 @@ using (var migrator = new Migrator(provider, connectionString, assembly))
 }
 ```
 
-В конструктор класса `Migrator` вы можете передать последним аргументом экземпляр `ILogger` ([Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/)). В этот логгер будут записана вся информация во время выполнения миграций.
+You can pass an `ILogger` instance ([Microsoft.Extensions.Logging](https://www.nuget.org/packages/Microsoft.Extensions.Logging/)) as the last argument to the `Migrator` class constructor. All information will be written to this logger during migrations.
 
 ```c#
 var version = -1;
@@ -78,6 +78,6 @@ using (var loggerFactory = new LoggerFactory())
 
 ```
 
-## Далее
+## Supported DBMS
 
 [Поддерживаемые СУБД](dialects.md).

@@ -1,12 +1,12 @@
-# Создание миграций
+# Writing migrations
 
-Миграции - это классы .NET, в коде которых описаны изменения БД с помощью специального API. Классы компилируются в файл `.dll`, имея который, можно применить изменения для конкретной БД. 
+Migrations are .NET classes whose code describes changes to the database using a special API. Classes are compiled into a `.dll` file, having which, you can apply changes to a specific database. 
 
-Миграции наследуются от абстрактного базового класса `ThinkingHome.Migrator.Framework.Migration` и реализуют его абстрактный метод `Apply`. В этом методе находится описание всех нужных имзменений БД. Также в миграциях можно переопределить виртуальный метод `Revert` базового класса. Там можно описать действия для отката изменений миграции. Например, если в методе `Apply` была создана новая таблица, то в методе `Revert` можно её удалить. 
+Migrations inherit from the abstract base class `ThinkingHome.Migrator.Framework.Migration` and implement its abstract `Apply` method. This method contains a description of all the necessary changes to the database. You can also override the `Revert` virtual method of the base class in migrations. There you can describe the actions for rolling back migration changes. For example, if a new table was created in the `Apply` method, then it can be deleted in the `Revert` method. 
 
-### Контроль версий
+### Version control
 
-Для каждой миграции нужно указать номер версии, в которую перейдет БД после применения изменений. Для этого нужно отметить класс миграции атрибутом `[Migration]` и указать номер версии как его параметр.
+For each migration, you must specify the version number to which the database will move after applying the changes. To do this, you need to mark the migration class with the `[Migration]` attribute and specify the version number as its parameter.
 
 ```c#
 using ThinkingHome.Migrator.Framework;
@@ -18,90 +18,90 @@ public class MyTestMigration : Migration
 }
 ```
 
-Номер версии — это 64-разрядное целое число. Вы можете указать в качестве номера версии любое значение на свой выбор. Например, это может быть порядковый номер миграции или timestamp (временная метка). Главное — помнить, что миграции с меньшим номером будут выполнены раньше, чем миграции с бо́льшим номером.
+The version number is a 64-bit integer. You can specify any value of your choice as the version number. For example, it can be a migration sequence number or a timestamp (time stamp). Keep in mind that migrations with a lower number will be completed before migrations with a higher number.
 
-Если в миграциях реализован метод `Revert`, то можно обновить БД до версии, ниже текущей — миграции будут выполнены в обратном порядке.
+If the `Revert` method is implemented in the migrations, then you can update the database to a version lower than the current one - the migrations will be performed in the reverse order.
 
-### Параллельное версионирование
+### Independent versioning
 
-Мигратор может параллельно вести в одной БД учет версий для нескольких независимых приложений. Например, это может быть полезно, когда вы пишете модульное приложение, в которм каждый из модулей имеет отдельную структуру БД и может независимо обновляться.  
+Migrator can simultaneously keep track of versions for several independent applications in one database. For example, this can be useful when you are writing a modular application where each of the modules has a separate database structure and can be updated independently.  
 
-При выполнении миграций информация о них записывается в специальную таблицу в БД. Кроме версии миграции, туда записывается идентификатор сборки, в которой она находится. По умолчанию он совпадает с именем файла `.dll`. При запуске мигратор строит план выполнения — список миграций, которые нужно выполнить, чтобы перевести БД из текущей версии в нужную. При построении плана учитываются только те миграции, идентификатор сборки которых совпадает с текущим `.dll` файлом.
+When performing migrations, information about them is recorded in a special table in the database. In addition to the migration version, the identifier of the assembly in which it is located is written there. By default, it is the same as the `.dll` file name. When launched, the migrator builds an execution plan - a list of migrations that need to be performed in order to transfer the database from the current version to the desired one. When building a plan, only those migrations are taken into account, the assembly ID of which matches the current `.dll` file.
 
-Если вам нужно, чтобы у миграций из нескольких сборок был одинаковый идентификатор, отметьте каждый файл `.dll` атрибутом `[MigrationAssembly]`, передав в качестве аргумента одинаковое значение.
+If you need migrations from multiple assemblies to have the same ID, mark each `.dll` file with the `[MigrationAssembly]` attribute, passing the same value as an argument.
 
 ```c#
 [assembly: MigrationAssembly("my-key")]
 ```
 
-### Названия объектов БД
+### Names of database objects
 
-При описании изменений часто нужно ссылаться на объекты БД (таблицы, столбцы, индексы и т.д.) по имени. Имя может включать название схемы БД, к которой относится объект.
+When describing changes, it is often necessary to refer to database objects (tables, columns, indexes, etc.) by name. The name may include the name of the database schema to which the object belongs.
 
-Для работы с названиями объектов БД в пакете `ThinkingHome.Migrator.Framework` описан специальный класс `SchemaQualifiedObjectName`. У него есть два поля: `Name` — название объекта БД и `Schema` — название схемы (может быть пустым). Многие методы API мигратора принимают аргументы с типом `SchemaQualifiedObjectName`. 
+To work with the names of database objects, the `ThinkingHome.Migrator.Framework` package describes a special class `SchemaQualifiedObjectName`. It has two fields: `Name` is the name of the database object and `Schema` is the name of the schema (may be empty). Many of the migrator API methods take arguments of type `SchemaQualifiedObjectName`. 
 
-Чтобы было удобно работать с именами объектов БД, сделано автоматическое приведение типов `string` → `SchemaQualifiedObjectName`. Следующие две команды — эквивалентны:
+To make it convenient to work with the names of database objects, automatic typecasting `string` → `SchemaQualifiedObjectName` is made. The following two commands are equivalent:
 
 ```c#
-// удаление таблицы "my_table"
+// delete table "my_table"
 Database.RemoveTable(new SchemaQualifiedObjectName { Name = "my_table" });
 
-// удаление таблицы "my_table"
+// delete table "my_table"
 Database.RemoveTable("my_table");
 ```
 
-Если нужно указать название схемы, используйте extension method `WithSchema` класса `string`. Следующие записи — эквивалентны:
+If you need to specify a schema name, use the `WithSchema` extension method of the `string` class. The following commands are equivalent:
 
 ```c#
-// удаление таблицы "test.my_table"
+// delete table "test.my_table"
 Database.RemoveTable(new SchemaQualifiedObjectName { Name = "my_table", Schema = "test" });
 
-// удаление таблицы "test.my_table"
+// delete table "test.my_table"
 Database.RemoveTable("my_table".WithSchema("test"));
 ``` 
 
-### Типы столбцов
+### Column types
 
-Пожожая ситуация — с типами столбцов. Для них часто нужно указывать дополнительную информацию, например, максимальную длину для строк или точность для вещественных чисел.
+A similar situation is with column types. They often require additional information, such as the maximum length for strings or the precision for real numbers.
 
-Для удобной работы с типами столбцов описан специальный класс `ColumnType`. У него есть поля:
+For convenient work with column types, a special class `ColumnType` is described. It has fields:
 
-- `DataType (System.Data.DbType)` — тип данных
-- `Length (int?)` — длина
-- `Scale (int?)` — точность
+- `DataType (System.Data.DbType)` — data type
+- `Length (int?)` — length
+- `Scale (int?)` — precision
 
-Как и для названий объектов БД, для типов столбцов сделано неявное приведение типов `System.Data.DbType` → `ColumnType` и методы расширения.
+As well as for the names of database objects, implicit type casting `System.Data.DbType` → `ColumnType` and extension methods are implemented for column types.
 
 ```c#
-// добавить в таблицу "my_table" колонку "test_integer_column" типа INT
+// add an INT column "test_integer_column" to the "my_table" table
 Database.AddColumn("my_table", new Column("test_integer_column", DbType.Int32));
 
-// добавить в таблицу "my_table" колонку "test_string_column" типа NVARCHAR(255)
+// add to table "my_table" column "test_string_column" of type NVARCHAR(255)
 Database.AddColumn("my_table", new Column("test_string_column", DbType.String.WithSize(255)));
 
-// добавить в таблицу "my_table" колонку "test_string_column" типа NVARCHAR(MAX)
+// add a column "test_string_column" of type NVARCHAR(MAX) to the table "my_table"
 Database.AddColumn("my_table", new Column("test_string_column", DbType.String.WithSize(int.MaxValue)));
 
-// добавить в таблицу "my_table" колонку "test_decimal_column" типа DECIMAL(10, 4)
+// add a column "test_decimal_column" of type DECIMAL(10, 4) to the table "my_table"
 Database.AddColumn("my_table", new Column("test_decimal_column", DbType.Decimal.WithSize(10, 4)));
 ```
 
 
-### Условные операции
+### Conditional operations
 
-Мигратор предоставляет одинаковый API для работы с разными СУБД. Это очень удобно. Вы можете использовать на разных проектах один и тот же API, вне зависимости от того, с какой СУБД они работают. Еще одна ситуация, где одинаковый API будет полезен — когда в одном проекте нужно поддерживать несколько разных СУБД.
+Migrator provides the same API for working with different DBMS. It is very comfortable. You can use the same API on different projects, regardless of which DBMS they work with. Another situation where the same API will be useful is when you need to support several different DBMS in one project.
 
-Большинство операций, которые выполняет мигратор, одинаково работают во всех поддерживаемых СУБД. Пример такой операции — создание таблицы. Для каждой СУБД автоматически будут сгенерированы SQL запросы в нужном синтаксисе. Есть также операции, для выполнения которых в разных СУБД нужно сделать разные действия. Пример такой операции — создание хранимой процедуры. SQL запросы для хранимых процедур нельзя матоматически сгенерировать. Вам нужно отдельно реализовать хранимые процедуры для каждой СУБД (например, сделать несколько `.sql` файлов и положить их в ресурсы) и в зависимости от СУБД, внутри миграции использовать нужный SQL запрос.  
+Most of the operations performed by the migrator work the same in all supported DBMSs. An example of such an operation is the creation of a table. For each DBMS, SQL queries will be automatically generated in the required syntax. There are also operations that require different actions to be performed in different DBMSs. An example of such an operation is the creation of a stored procedure. SQL queries for stored procedures cannot be automatically generated. You need to separately implement stored procedures for each DBMS (for example, make several `.sql` files and put them in resources) and, depending on the DBMS, use the necessary SQL query inside the migration.  
 
-Для условного выполнения команд, в зависимости от СУБД, используйте метод `ConditionalExecuteAction`.
+For conditional execution of commands, depending on the DBMS, use the `ConditionalExecuteAction` method.
 
 ```c#
 public override void Apply()
 {
-    // сборка, в которой находится текущая миграция
+    // the assembly that contains the current migration
     var asm = GetType().Assembly;
 
-    // выполнить SQL скрипты из ресурсов dll - разные для разных СУБД
+    // execute SQL scripts from dll resources - different for different DBMS
     Database.ConditionalExecuteAction()
         .For<PostgreSQLTransformationProvider>(db => db.ExecuteFromResource(asm, "file.for.postgres.sql"))
         .For<SqlServerTransformationProvider>(db => db.ExecuteFromResource(asm, "file.for.mssql.sql"))
@@ -110,17 +110,17 @@ public override void Apply()
 }
 ```
 
-## API провайдеров трансформации
+## Transform Providers API
 
-### Операции с таблицами
+### Table operations
 
-Создание новой таблицы:
+Creating a new table:
 
 ```c#
 void AddTable(SchemaQualifiedObjectName name, params Column[] columns);
 ```
 
-> Первый аргумент - название, дальше - список столбцов таблицы. Для каждого столбца нужно указать название и тип, а также можно указать дополнительные свойства (например, `NOT NULL`) и значение по умолчанию.
+> The first argument is the title, then the list of table columns. For each column, you must specify a name and type, and you can also specify additional properties (for example, `NOT NULL`) and a default value.
 
 ```c#
 Database.AddTable("my_table",
@@ -128,7 +128,7 @@ Database.AddTable("my_table",
     new Column("Name", DbType.String.WithSize(50), ColumnProperty.NotNull));
 ```
 
-> Для создания таблицы с составным первичным ключом нужно указать для нескольких нужных колонок параметр `ColumnProperty.PrimaryKey`.
+> To create a table with a composite primary key, you need to specify the `ColumnProperty.PrimaryKey` parameter for several required columns.
 
 ```c#
 Database.AddTable("CustomerAddress",
@@ -137,77 +137,77 @@ Database.AddTable("CustomerAddress",
 );
 ``` 
 
-Проверить, что существует таблица с заданным именем:
+Check if a table with the given name exists:
 
 ```c#
 bool TableExists(SchemaQualifiedObjectName tableName);
 ```
 
-Получить список таблиц в заданной схеме:
+Get a list of tables in a given schema:
 
 ```c#
 SchemaQualifiedObjectName[] GetTables(string schema = null);
 ```
 
-Переименовать таблицу:
+Rename table:
 
 ```c#
 void RenameTable(SchemaQualifiedObjectName oldName, string newName);
 ```
 
-Удалить таблицу:
+Delete table:
 
 ```c#
 void RemoveTable(SchemaQualifiedObjectName tableName);
 ```
 
-### Операции со столбцами таблиц
+### Operations with table columns
 
-Добавить столбец в таблицу:
+Add column to table:
 
 ```c#
 void AddColumn(SchemaQualifiedObjectName table, Column column);
 ```
 
-Проверить, что в таблице существует столбец с заданным именем:
+Check if a column with the given name exists in the table:
 
 ```c#
 bool ColumnExists(SchemaQualifiedObjectName table, string column);
 ```
 
-Переименовать столбец таблицы:
+Rename table column:
 
 ```c#
 void RenameColumn(SchemaQualifiedObjectName tableName, string oldColumnName, string newColumnName);
 ```
 
-Изменить тип столбца или его возможность хранить значение `NULL`:
+Change the type of a column or its ability to store a `NULL` value:
 
 ```c#
 void ChangeColumn(SchemaQualifiedObjectName table, string column, ColumnType columnType, bool notNull);
 ```
 
-Изменить для столбца таблицы значение по умолчанию:
+Change the default value for a table column:
 
 ```c#
 void ChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue);
 ```
 
-Удалить столбец таблицы:
+Delete table column:
 
 ```c#
 void RemoveColumn(SchemaQualifiedObjectName table, string column);
 ```
 
-### Ограничения
+### Constraints
 
-Создать первичный ключ:
+Create primary key:
 
 ```c#
 void AddPrimaryKey(string name, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
-> Можно указать несколько столбцов, чтобы создать составной первичный ключ:
+> You can specify multiple columns to create a composite primary key:
 
 ```c#
 Database.AddTable("CustomerAddress",
@@ -218,7 +218,7 @@ Database.AddTable("CustomerAddress",
 Database.AddPrimaryKey("CustomerAddress", "customer_id", "address_id");
 ```
 
-Создать внешний ключ:
+Create foreign key:
 
 ```c#
 void AddForeignKey(
@@ -231,98 +231,99 @@ void AddForeignKey(
         ForeignKeyConstraint onUpdateConstraint = ForeignKeyConstraint.NoAction);
 ```
 
-Добавить ограничение на уникальность значений:
+Create unique constraint:
 
 ```c#
 void AddUniqueConstraint(string name, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
-Добавить ограничение по условию:
+Create check constraint:
 
 ```c#
 void AddCheckConstraint(string name, SchemaQualifiedObjectName table, string checkSql);
 ```
 
-Проверить, существует ли ограничение с заданным именем:
+Check if a constraint with the given name exists:
 
 ```c#
 bool ConstraintExists(SchemaQualifiedObjectName table, string name);
 ```
 
-Удалить ограничение с заданным именем:
+Delete constraint with given name:
 
 ```c#
 void RemoveConstraint(SchemaQualifiedObjectName table, string name);
 ```
 
 
-### Индексы
+### Indices
 
-Добавить индекс:
+Add index:
 
 ```c#
 void AddIndex(string name, bool unique, SchemaQualifiedObjectName table, params string[] columns);
 ```
 
-Проверить, существует ли индекс с заданным именем:
+Check if an index with the given name exists:
 
 ```c#
 bool IndexExists(string indexName, SchemaQualifiedObjectName tableName);
 ```
 
-Удалить индекс:
+Delete index:
 
 ```c#
 void RemoveIndex(string indexName, SchemaQualifiedObjectName tableName);
 ```
 
 
-### Операции с данными
+### Data operations
 
-Вставить запись в таблицу:
+Insert record into table:
 
 ```c#
 int Insert(SchemaQualifiedObjectName table, string[] columns, string[] values);
 ```
 
-Изменить значения в строках таблицы по условию:
+Change values in table rows by condition:
 
 ```c#
 int Update(SchemaQualifiedObjectName table, string[] columns, string[] values, string whereSql = null);
 ```
 
-Удалить записи из таблицы по условию:
+Delete records from a table by condition:
 
 ```c#
 int Delete(SchemaQualifiedObjectName table, string whereSql = null);
 ```
 
 
-### Произвольные SQL запросы
+### Custom SQL queries
 
-Выполнить произвольный SQL запрос, заданный строкой:
+Execute an custom SQL query given by the line:
 
 ```c#
 int ExecuteNonQuery(string sql);
 ```
 
-Прочитать данные с помощью произвольного SQL запроса:
+Read data using an custom SQL query:
 
 ```c#
 IDataReader ExecuteReader(string sql);
 ```
 
-Получить отдельное значение с помощью произвольного SQL запроса:
+Get a single value using an custom SQL query:
 
 ```c#
 object ExecuteScalar(string sql);
 ```
 
-Выполнить произвольный SQL запрос, содержащийся в текстовом файле в ресурсах `.dll`
+Execute an custom SQL query contained in a text file in `.dll` resources
 
 ```c#
 void ExecuteFromResource(Assembly assembly, string path);
 ```
-## Далее
 
-Узнайте о способах выполнения миграций в разделе [Как запустить](how-to-run.md).
+## Next steps
+
+Learn [how to run migrations](how-to-run.md).
