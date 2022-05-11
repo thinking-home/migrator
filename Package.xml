@@ -5,7 +5,7 @@
 
         <Authors>Dmitry Andriyanov &lt;dima117a@gmail.com&gt;</Authors>
         <NeutralLanguage>en-US</NeutralLanguage>
-        <Copyright>Thinking-Home.RU © 2020</Copyright>
+        <Copyright>Thinking-Home.RU © 2022</Copyright>
 
         <PackageTags>thinking-home;db;migrations</PackageTags>
         <PackageProjectUrl>https://github.com/thinking-home/migrator</PackageProjectUrl>

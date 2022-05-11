@@ -62,12 +62,14 @@ namespace ThinkingHome.Migrator.Tests.Providers
             Assert.Throws<NotSupportedException>(base.CanAddForeignKeyWithDeleteSetDefault);
         }
 
-        protected override string GetRandomName(string baseName = "")
+        protected override string GetRandomName(string baseName = "Obj")
         {
             var shortBaseName = baseName.Substring(0, Math.Min(baseName.Length, 10));
 
             // oracle does not support identifiers longer than 27 characters
-            return base.GetRandomName(shortBaseName).Substring(0, 27);
+            var randomName = base.GetRandomName(shortBaseName);
+            
+            return randomName.Length > 27 ? randomName.Substring(0, 27) : randomName;
         }
     }
 }

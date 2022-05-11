@@ -47,6 +47,7 @@ docker exec mysql1 /init-mysql.sh
 
 ```sh
 docker run --name postgres -d -p 5432:5432\
+    -e POSTGRES_PASSWORD=123\
     -v $(pwd)/bash/init-postgres.sh:/init-postgres.sh\
     postgres
 
@@ -68,7 +69,7 @@ docker exec orcl /init-oracle.sh
 After starting all the necessary DBMS, you can run the tests with the command `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net5.0
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
 ```
 
 ## Own transformation providers

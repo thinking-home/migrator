@@ -567,11 +567,10 @@ namespace ThinkingHome.Migrator.Tests
         [Fact]
         public virtual void CanRemoveColumnWithContrainsts()
         {
-            SchemaQualifiedObjectName primaryTable = GetRandomTableName("RemoveColumnWithContraints_Primary");
-            SchemaQualifiedObjectName refTable = GetRandomTableName("RemoveColumnWithContraints_Ref");
+            SchemaQualifiedObjectName primaryTable = GetRandomTableName("RemoveColWithContraints_Primary");
+            SchemaQualifiedObjectName refTable = GetRandomTableName("RemoveColWithContraints_Ref");
             string column = GetRandomName();
             string foreignKeyName = GetRandomName("FK_TestSimpleKey");
-            string constraintName = GetRandomName("CC_AddCheckConstraint");
 
             provider.AddTable(primaryTable, 
                 new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey),
@@ -581,9 +580,6 @@ namespace ThinkingHome.Migrator.Tests
 
             provider.AddTable(refTable,
                 new Column("ID", DbType.Int32, ColumnProperty.PrimaryKey));
-
-            string checkSql = provider.FormatSql("{0:NAME} > 5", "ID");
-            provider.AddCheckConstraint(constraintName, primaryTable, checkSql);
 
             provider.AddForeignKey(foreignKeyName, primaryTable, "RefID", refTable, "ID");
 
@@ -1379,9 +1375,13 @@ namespace ThinkingHome.Migrator.Tests
 
         #region helpers
 
-        protected virtual string GetRandomName(string baseName = "")
+        private long Increment { get; set; } = 0;
+
+        protected virtual string GetRandomName(string baseName = "Obj")
         {
-            return $"{baseName}_{Guid.NewGuid():N}";
+            var now = DateTime.Now.Ticks.ToString(); 
+
+            return $"{baseName}_{Increment++}_{new string(now.Reverse().ToArray())}";
         }
 
         protected virtual SchemaQualifiedObjectName GetRandomTableName(string baseName = "")
