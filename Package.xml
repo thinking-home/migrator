@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <VersionPrefix>3.4.0</VersionPrefix>
+        <VersionPrefix>3.5.0</VersionPrefix>
         <!--<VersionSuffix>alpha9</VersionSuffix>-->
 
         <Authors>Dmitry Andriyanov &lt;dima117a@gmail.com&gt;</Authors>
