@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using ThinkingHome.Migrator.Framework;
@@ -84,9 +85,15 @@ namespace ThinkingHome.Migrator.Providers.MySql
 
         protected override string GetSqlRemoveConstraint(SchemaQualifiedObjectName table, string name)
         {
-            string constraintSql = (name ?? string.Empty).ToUpper() == "PRIMARY"
-                ? "PRIMARY KEY"
-                : FormatSql("KEY {0:NAME}", name);
+            var constraintTypeSql = GetConstraintTypeSql(table, name);
+            var constraintType = ExecuteScalar(constraintTypeSql).ToString();
+
+            string constraintSql = constraintType?.ToUpper() switch
+            {
+                "PRIMARY KEY" => "PRIMARY KEY",
+                "FOREIGN KEY" => FormatSql("FOREIGN KEY {0:NAME}", name),
+                _ => FormatSql("KEY {0:NAME}", name)
+            }; 
 
             return FormatSql("ALTER TABLE {0:NAME} DROP {1}", table, constraintSql);
         }
@@ -209,6 +216,67 @@ namespace ThinkingHome.Migrator.Providers.MySql
 
             base.AddForeignKey(name, primaryTable, primaryColumns, refTable, refColumns, onDeleteConstraint,
                 onUpdateConstraint);
+        }
+        
+        public override void RemoveColumn(SchemaQualifiedObjectName table, string column)
+        {
+            DeleteColumnConstraints(table, column);
+            base.RemoveColumn(table, column);
+        }
+
+        // Deletes all constraints linked to a column.
+        // Sql Server doesn't seems to do this.
+        private void DeleteColumnConstraints(SchemaQualifiedObjectName table, string column)
+        {
+            string sqlContraints = GetColConstraintsSql(table, column);
+            var constraints = new List<string>();
+            using (IDataReader reader = ExecuteReader(sqlContraints))
+            {
+                while (reader.Read())
+                {
+                    constraints.Add(reader.GetString(0));
+                }
+            }
+
+            // Can't share the connection so two phase modif
+            foreach (string constraint in constraints)
+            {
+                RemoveConstraint(table, constraint);
+            }
+        }
+        
+        protected string GetColConstraintsSql(SchemaQualifiedObjectName table, string column)
+        {
+            var sqlBuilder = new StringBuilder();
+            
+            sqlBuilder.Append(FormatSql("SELECT {0:NAME} ", "CONSTRAINT_NAME"));
+            sqlBuilder.Append(FormatSql("FROM {0:NAME} ", "KEY_COLUMN_USAGE".WithSchema("INFORMATION_SCHEMA")));
+            sqlBuilder.Append(FormatSql("WHERE {0:NAME} = '{1}' AND {2:NAME} = '{3}' ",
+                "TABLE_NAME", table.Name, "COLUMN_NAME", column));
+            
+            if (!table.SchemaIsEmpty)
+            {
+                sqlBuilder.Append(FormatSql("AND {0:NAME} = '{1}' ", "TABLE_SCHEMA", table.Schema));
+            }
+
+            return sqlBuilder.ToString();
+        }
+        
+        protected string GetConstraintTypeSql(SchemaQualifiedObjectName table, string name)
+        {
+            var sqlBuilder = new StringBuilder();
+            
+            sqlBuilder.Append(FormatSql("SELECT {0:NAME} ", "CONSTRAINT_TYPE"));
+            sqlBuilder.Append(FormatSql("FROM {0:NAME} ", "TABLE_CONSTRAINTS".WithSchema("INFORMATION_SCHEMA")));
+            sqlBuilder.Append(FormatSql("WHERE {0:NAME} = '{1}' AND {2:NAME} = '{3}' ",
+                "TABLE_NAME", table.Name, "CONSTRAINT_NAME", name));
+            
+            if (!table.SchemaIsEmpty)
+            {
+                sqlBuilder.Append(FormatSql("AND {0:NAME} = '{1}' ", "TABLE_SCHEMA", table.Schema));
+            }
+
+            return sqlBuilder.ToString();
         }
 
         #endregion
