@@ -19,5 +19,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: setup docker
+      uses: docker-practice/actions-setup-docker@1.0.9
+    - name: setup Oracle
+      run: docker run --name orcl -d -p 1521:1521 -v $(pwd)/bash/init-oracle.sh:/init-oracle.sh wnameless/oracle-xe-11g-r2 && docker exec orcl /init-oracle.sh
     - name: Tests
       run: dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
