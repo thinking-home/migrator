@@ -19,3 +19,5 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Tests
+      run: dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
