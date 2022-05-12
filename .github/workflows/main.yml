@@ -2,7 +2,6 @@ name: Build & run tests
 
 on:
   push:
-  pull_request:
 
 jobs:
   build:
@@ -19,9 +18,11 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: setup docker
+    - name: Setup docker
       uses: docker-practice/actions-setup-docker@1.0.9
-    - name: setup Oracle
+    - name: Setup Oracle
       run: docker run --name orcl -d -p 1521:1521 -v $(pwd)/bash/init-oracle.sh:/init-oracle.sh wnameless/oracle-xe-11g-r2 && docker exec orcl /init-oracle.sh
+    - name: Setup Postgres
+      run: docker run --name postgres -d -p 5432:5432 -e POSTGRES_PASSWORD=123 -v $(pwd)/bash/init-postgres.sh:/init-postgres.sh postgres && docker exec postgres /init-postgres.sh
     - name: Tests
       run: dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
