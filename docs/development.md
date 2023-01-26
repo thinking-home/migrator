@@ -2,7 +2,7 @@
 
 ## Как собрать проект
 
-Для сборки проекта вам нужно установить [.NET Core 5.0 SDK](https://www.microsoft.com/net/download).
+Для сборки проекта вам нужно установить [.NET Core 7.0 SDK](https://www.microsoft.com/net/download).
 
 ```bash
 git clone https://github.com/thinking-home/migrator.git
