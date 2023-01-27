@@ -69,7 +69,7 @@ docker exec orcl /init-oracle.sh
 После запуска всех нужных СУБД вы можете запустить тесты командой `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net7.0
 ```
 
 ## Собственные провайдеры трансформации

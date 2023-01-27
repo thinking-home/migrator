@@ -69,7 +69,7 @@ docker exec orcl /init-oracle.sh
 After starting all the necessary DBMS, you can run the tests with the command `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net6.0
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net7.0
 ```
 
 ## Own transformation providers
