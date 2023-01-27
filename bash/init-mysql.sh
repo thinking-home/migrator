@@ -7,7 +7,7 @@ echo "create alt schema"
 mysql -e "CREATE SCHEMA Moo;"
 
 echo "create user"
-mysql -e "CREATE USER 'migrator' IDENTIFIED BY '123';"
+mysql -e "CREATE USER 'migrator'@'%' IDENTIFIED BY '123';"
 
 echo "create alt user"
 mysql -e "CREATE USER 'migrator'@'localhost' IDENTIFIED BY '123';"
