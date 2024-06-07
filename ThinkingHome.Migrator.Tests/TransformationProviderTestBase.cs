@@ -378,9 +378,9 @@ namespace ThinkingHome.Migrator.Tests
                 Assert.True(reader.Read());
 
                 Assert2.Equal(22, reader["ID"]);
-                Assert.Equal(true, Convert.ToBoolean(reader["Boolean1"]));
-                Assert.Equal(false, Convert.ToBoolean(reader["Boolean2"]));
-
+                Assert.True(Convert.ToBoolean(reader["Boolean1"]));
+                Assert.False(Convert.ToBoolean(reader["Boolean2"]));
+                
                 Assert.False(reader.Read());
             }
 

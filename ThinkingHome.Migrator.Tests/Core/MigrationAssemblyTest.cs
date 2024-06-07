@@ -25,9 +25,9 @@ namespace ThinkingHome.Migrator.Tests.Core
             Assert.Equal("test-key111", migrationAssembly.Key);
 
             Assert.Equal(3, list.Count);
-            Assert.True(list.Contains(1));
-            Assert.True(list.Contains(2));
-            Assert.True(list.Contains(4));
+            Assert.Contains(1, list);
+            Assert.Contains(2, list);
+            Assert.Contains(4, list);
         }
 
         /// <summary>
