@@ -2,7 +2,7 @@
 
 ## How to build a project
 
-To build the project you need to install [.NET Core 7.0 SDK](https://www.microsoft.com/net/download).
+To build the project you need to install [.NET Core 8.0 SDK](https://www.microsoft.com/net/download).
 
 ```bash
 git clone https://github.com/thinking-home/migrator.git
@@ -64,12 +64,14 @@ docker run --name orcl -d -p 1521:1521\
 docker exec orcl /init-oracle.sh
 ```
 
+* a more recent version of the Oracle database : `container-registry.oracle.com/database/express:21.3.0-xe`
+
 ### Running tests
 
 After starting all the necessary DBMS, you can run the tests with the command `dotnet test`:
 
 ```bash
-dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net7.0
+dotnet test ./ThinkingHome.Migrator.Tests -c Release -f net8.0
 ```
 
 ## Own transformation providers

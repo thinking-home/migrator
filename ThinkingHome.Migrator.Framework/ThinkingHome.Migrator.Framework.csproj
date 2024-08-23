@@ -2,6 +2,6 @@
     <Import Project="../Package.xml"/>
     <PropertyGroup>
         <Description>This package contains the basis necessary to create migrations.</Description>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 </Project>
