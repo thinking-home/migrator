@@ -26,6 +26,7 @@ namespace ThinkingHome.Migrator.Providers.Oracle
             typeMap.Put(DbType.Currency, "NUMBER(19,1)");
             typeMap.Put(DbType.Date, "DATE");
             typeMap.Put(DbType.DateTime, "TIMESTAMP(4)");
+            typeMap.Put(DbType.DateTime, 6, "TIMESTAMP($l)");
             typeMap.Put(DbType.Decimal, "NUMBER");
             typeMap.Put(DbType.Decimal, 38, "NUMBER($l, $s)", 2);
             // having problems with both ODP and OracleClient from MS not being able

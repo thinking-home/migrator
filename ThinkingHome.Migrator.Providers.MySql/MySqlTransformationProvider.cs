@@ -33,6 +33,7 @@ namespace ThinkingHome.Migrator.Providers.MySql
             typeMap.Put(DbType.Currency, "MONEY");
             typeMap.Put(DbType.Date, "DATE");
             typeMap.Put(DbType.DateTime, "DATETIME");
+            typeMap.Put(DbType.DateTime, 6, "DATETIME($l)");
             typeMap.Put(DbType.Decimal, "NUMERIC");
             typeMap.Put(DbType.Decimal, 38, "NUMERIC($l, $s)", 2);
             typeMap.Put(DbType.Double, "DOUBLE");

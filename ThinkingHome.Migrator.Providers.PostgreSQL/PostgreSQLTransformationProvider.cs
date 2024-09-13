@@ -25,6 +25,7 @@ namespace ThinkingHome.Migrator.Providers.PostgreSQL
             typeMap.Put(DbType.Currency, "decimal(16,4)");
             typeMap.Put(DbType.Date, "date");
             typeMap.Put(DbType.DateTime, "timestamp");
+            typeMap.Put(DbType.DateTime, 6, "timestamp($l)");
             typeMap.Put(DbType.Decimal, "decimal(18,5)");
             typeMap.Put(DbType.Decimal, 18, "decimal($l, $s)");
             typeMap.Put(DbType.Double, "float8");
