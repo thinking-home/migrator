@@ -310,8 +310,8 @@ namespace ThinkingHome.Migrator.Tests
             var tables = provider.GetTables(schema);
 
             Assert.True(tables.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
-            Assert.False(tables.Select(t => t.Name).Contains(table1.Name, StrComparer));
-            Assert.False(tables.Select(t => t.Name).Contains(table2.Name, StrComparer));
+            Assert.DoesNotContain(table1.Name, tables.Select(t => t.Name), StrComparer);
+            Assert.DoesNotContain(table2.Name, tables.Select(t => t.Name), StrComparer);
 
             provider.AddTable(table1, new Column("ID", DbType.Int32));
             provider.AddTable(table2, new Column("ID", DbType.Int32));
@@ -320,8 +320,8 @@ namespace ThinkingHome.Migrator.Tests
 
             Assert.Equal(tables.Length + 2, tables2.Length);
             Assert.True(tables2.All(t => StrComparer.Equals(t.Schema, schemaForCompare)));
-            Assert.True(tables2.Select(t => t.Name).Contains(table1.Name, StrComparer));
-            Assert.True(tables2.Select(t => t.Name).Contains(table2.Name, StrComparer));
+            Assert.Contains(table1.Name, tables2.Select(t => t.Name), StrComparer);
+            Assert.Contains(table2.Name, tables2.Select(t => t.Name), StrComparer);
 
             provider.RemoveTable(table1);
             provider.RemoveTable(table2);

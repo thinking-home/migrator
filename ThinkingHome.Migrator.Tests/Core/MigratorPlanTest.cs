@@ -53,10 +53,10 @@ namespace ThinkingHome.Migrator.Tests.Core
             var available = new List<long> { 5, 10, 15, 20 };
 
             var res = Migrator.BuildMigrationPlan(12, applied, available);
-            Assert.Equal(0, res.Count());
+            Assert.Empty(res);
 
             var res2 = Migrator.BuildMigrationPlan(17, applied, available);
-            Assert.Equal(1, res2.Count());
+            Assert.Single(res2);
             Assert.Equal(15, res2.ElementAt(0));
 
             var res3 = Migrator.BuildMigrationPlan(23, applied, available);
@@ -75,7 +75,7 @@ namespace ThinkingHome.Migrator.Tests.Core
             var available = new List<long> { 5, 10, 15, 20 };
 
             var res = Migrator.BuildMigrationPlan(12, applied, available);
-            Assert.Equal(1, res.Count());
+            Assert.Single(res);
             Assert.Equal(15, res.ElementAt(0));
 
             var res2 = Migrator.BuildMigrationPlan(7, applied, available);
@@ -94,7 +94,7 @@ namespace ThinkingHome.Migrator.Tests.Core
             var available = new List<long> { 1, 2, 3, 4, 77, 88 };
 
             var res = Migrator.BuildMigrationPlan(3, applied, available);
-            Assert.Equal(0, res.Count());
+            Assert.Empty(res);
         }
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace ThinkingHome.Migrator.Tests.Core
                     Migrator.BuildMigrationPlan(5, applied, available));
 
             Assert.Equal(2, ex.Versions.Length);
-            Assert.True(ex.Versions.Contains(3));
-            Assert.True(ex.Versions.Contains(2));
+            Assert.Contains(3, ex.Versions);
+            Assert.Contains(2, ex.Versions);
         }
     }
 }
