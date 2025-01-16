@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using ThinkingHome.Migrator.Framework;
 using ThinkingHome.Migrator.Framework.Extensions;
@@ -74,15 +74,14 @@ namespace ThinkingHome.Migrator.Providers.SqlServer
             sqlBuilder.Append(FormatSql("WHERE {0:NAME}.{1:NAME} = object_id(N'{2:NAME}') AND {0:NAME}.{3:NAME} = '{4}'",
                 "col", "object_id", table, "name", column));
 
-            using (var reader = ExecuteReader(sqlBuilder.ToString()))
+            using var reader = ExecuteReader(sqlBuilder.ToString());
+            
+            if (reader.Read())
             {
-                if (reader.Read())
-                {
-                    return reader.GetString(0);
-                }
-
-                return null;
+                return reader.GetString(0);
             }
+
+            return null;
         }
 
         public override void ChangeDefaultValue(SchemaQualifiedObjectName table, string column, object newDefaultValue)

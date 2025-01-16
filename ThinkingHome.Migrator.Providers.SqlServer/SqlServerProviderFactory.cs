@@ -1,4 +1,4 @@
-﻿using System.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 
 namespace ThinkingHome.Migrator.Providers.SqlServer
