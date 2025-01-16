@@ -2,7 +2,7 @@
 
 ## How to build a project
 
-To build the project you need to install [.NET Core 8.0 SDK](https://www.microsoft.com/net/download).
+To build the project you need to install [.NET Core 9.0 SDK](https://www.microsoft.com/net/download).
 
 ```bash
 git clone https://github.com/thinking-home/migrator.git

@@ -94,8 +94,8 @@ namespace ThinkingHome.Migrator.Tests.Core
                 MigrationAssembly.CheckForDuplicatedVersion(versions));
 
             Assert.Equal(2, ex.Versions.Length);
-            Assert.True(ex.Versions.Contains(2));
-            Assert.True(ex.Versions.Contains(4));
+            Assert.Contains(2, ex.Versions);
+            Assert.Contains(4, ex.Versions);
         }
 
         /// <summary>
